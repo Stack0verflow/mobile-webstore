@@ -1,4 +1,77 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'utilities/style-definitions.scss';
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    box-sizing: border-box;
+    background: style-definitions.$background-main;
+    color: style-definitions.$text-main;
+}
+
+img {
+    user-select: none;
+}
+
+a {
+    color: style-definitions.$warn-color;
+    transition: 0.2s ease-in-out all;
+
+    &:hover {
+        color: style-definitions.$primary-color;
+    }
+}
+
+/* font sizes */
+.header-large {
+    font-size: style-definitions.$header-large;
+}
+.header-main-text {
+    font-size: style-definitions.$header-main-text;
+}
+.header-secondary-text {
+    font-size: style-definitions.$header-secondary-text;
+}
+.main-text {
+    font-size: style-definitions.$main-text;
+}
+.secondary-text {
+    font-size: style-definitions.$secondary-text;
+}
+.label-text {
+    font-size: style-definitions.$label-text;
+}
+
+/* snackbar panels */
+.mat-mdc-snack-bar-container {
+    &.snackbar-info {
+        --mdc-snackbar-container-color: #{style-definitions.$info} !important;
+        --mat-mdc-snack-bar-button-color: #{style-definitions.$white};
+        --mdc-snackbar-supporting-text-color: #{style-definitions.$white};
+
+        & .mdc-button__label {
+            color: #{style-definitions.$white} !important;
+        }
+    }
+
+    &.snackbar-success {
+        --mdc-snackbar-container-color: #{style-definitions.$success} !important;
+        --mat-mdc-snack-bar-button-color: #{style-definitions.$white};
+        --mdc-snackbar-supporting-text-color: #{style-definitions.$white};
+
+        & .mdc-button__label {
+            color: #{style-definitions.$white} !important;
+        }
+    }
+
+    &.snackbar-error {
+        --mdc-snackbar-container-color: #{style-definitions.$error} !important;
+        --mat-mdc-snack-bar-button-color: #{style-definitions.$white};
+        --mdc-snackbar-supporting-text-color: #{style-definitions.$white};
+
+        & .mdc-button__label {
+            color: #{style-definitions.$white} !important;
+        }
+    }
+}
+

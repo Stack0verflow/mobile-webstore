@@ -1,0 +1,33 @@
+/* color definitions */
+$white: #f9f9f9;
+$black: black;
+$dark-gray: #222222;
+$indigo-blue: #3f51b5;
+$indigo-pink: #FF4081;
+$orange: #f44336;
+$dark-blue: #012345;
+$green: rgb(20, 119, 20);
+$dark-red: rgb(121, 9, 9);
+
+/* application colors */
+$background-main: $dark-gray;
+$text-main: $white;
+
+$primary-color: $indigo-blue;
+$accent-color: $indigo-pink;
+$warn-color: $orange;
+
+$info: $dark-blue;
+$success: $green;
+$error: $dark-red;
+
+/* element heights */
+$menu-height: 80px;
+
+/* font sizes */
+$header-large: 36px;
+$header-main-text: 26px;
+$header-secondary-text: 23px;
+$main-text: 20px;
+$secondary-text: 18px;
+$label-text: 15px;
