@@ -1,7 +1,13 @@
 <nav>
     <a routerLink="home"><mat-icon>home</mat-icon><span>Home</span></a>
     <a routerLink="product/browse"><mat-icon>phone_android</mat-icon><span>Browse</span></a>
-    <a routerLink="order/cart"><mat-icon>shopping_cart</mat-icon><span>Cart</span></a>
+    <a routerLink="order/cart">
+        <mat-icon>shopping_cart</mat-icon>
+        <span>Cart</span>
+        @if (cartItemNum > 0) {
+            <div id="cart-item-number"><p>{{cartItemNum}}</p></div>
+        }
+    </a>
     <a *ngIf="isUserLoggedIn" routerLink="user/profile"><mat-icon>person</mat-icon><span>Profile</span></a>
     <a *ngIf="!isUserLoggedIn" routerLink="user/login"><mat-icon>person</mat-icon><span>Login</span></a>
 </nav>

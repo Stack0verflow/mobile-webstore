@@ -1,1 +1,22 @@
-<p>browse works!</p>
+<div id="browser">
+    <aside id="filters">
+        <h1>Filters</h1>
+    </aside>
+    <section id="content">
+        <section id="quick-filters">
+            <div class="quick-filter">
+                <img src="assets/andronix-icon.png" />
+                <span class="secondary-text">Andronix phones</span>
+            </div>
+            <div class="quick-filter">
+                <img src="assets/peach-icon.png" />
+                <span class="secondary-text">EyeOS phones</span>
+            </div>
+        </section>
+        <section id="models">
+            @for (model of models; track $index) {
+                <app-product-card [model]="model"></app-product-card>
+            }
+        </section>
+    </section>
+</div>

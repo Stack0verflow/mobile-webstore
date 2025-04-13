@@ -1,0 +1,5 @@
+@use '../utilities/style-definitions.scss';
+
+main {
+    height: calc(100vh - style-definitions.$menu-height);
+}

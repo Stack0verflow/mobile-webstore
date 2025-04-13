@@ -1,0 +1,82 @@
+@use '../../../../utilities/style-definitions.scss';
+
+mat-card {
+    height: 400px;
+    width: 300px;
+    background-color: style-definitions.$medium-gray;
+
+    &:hover {
+        cursor: pointer;
+        background-color: style-definitions.$light-gray;
+    }
+
+    #model-picture {
+        height: 30%;
+        width: fit-content;
+        align-self: center;
+    }
+
+    #name {
+        margin: 5px auto;
+    }
+
+    #color-selector {
+        display: flex;
+        margin-bottom: 10px;
+        justify-content: center;
+        column-gap: 10px;
+
+        > div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            row-gap: 2px;
+        }
+
+        .color-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px transparent solid;
+
+            &.selected-color {
+                border: 2px style-definitions.$accent-color solid;
+            }
+        }
+
+        span {
+            text-transform: capitalize;
+        }
+    }
+
+    #icons {
+        display: flex;
+        column-gap: 10px;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        margin-bottom: 10px;
+
+        img {
+            height: 100%;
+        }
+    }
+
+    #memory {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+
+    #price {
+        margin: 12px auto;
+        font-weight: 500;
+    }
+
+    #actions {
+        display: flex;
+        justify-content: center;
+    }
+}

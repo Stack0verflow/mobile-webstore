@@ -17,6 +17,11 @@ export class MenuComponent implements OnInit, OnDestroy {
             ? true
             : false;
 
+    cartItemNum: number =
+        localStorage.getItem('cart') && localStorage.getItem('cart') !== ''
+            ? localStorage.getItem('cart')!.split(';').length
+            : 0;
+
     constructor(private commonService: CommonService) {}
 
     ngOnInit(): void {
@@ -27,6 +32,12 @@ export class MenuComponent implements OnInit, OnDestroy {
                     this.isUserLoggedIn = currentUser ? true : false;
                 },
             });
+
+        this.commonService.cartItems$.pipe(takeUntil(this.destroy$)).subscribe({
+            next: () => {
+                this.cartItemNum++;
+            },
+        });
     }
 
     ngOnDestroy() {

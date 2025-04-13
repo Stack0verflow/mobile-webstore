@@ -10,12 +10,30 @@ export class CommonService {
     currentUserSubject: Subject<User | null> = new Subject<User | null>();
     currentUser$: Observable<User | null> =
         this.currentUserSubject.asObservable();
+    cartItemsSubject: Subject<string> = new Subject<string>();
+    cartItems$: Observable<string> = this.cartItemsSubject.asObservable();
 
     constructor(private snackBar: MatSnackBar) {}
 
     setCurrentUser(currentUser: User | null) {
         localStorage.setItem('current-user', JSON.stringify(currentUser));
         this.currentUserSubject.next(currentUser);
+    }
+
+    addProductToCart(productUuid: string) {
+        if (
+            localStorage.getItem('cart') &&
+            localStorage.getItem('cart') !== ''
+        ) {
+            localStorage.setItem(
+                'cart',
+                localStorage.getItem('cart') + ';' + productUuid
+            );
+        } else {
+            localStorage.setItem('cart', productUuid);
+        }
+
+        this.cartItemsSubject.next(productUuid);
     }
 
     openSnackBarSuccess(

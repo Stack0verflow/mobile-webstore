@@ -1,0 +1,24 @@
+<mat-card tabindex="0" routerLink="../view" [queryParams]="{id: model.uuid}">
+    <img id="model-picture" [src]="model.pictures[selectedColorIndex]" alt="{{model.name}} - {{model.colors[selectedColorIndex]}}"/>
+    <h1 id="name" class="main-text">{{model.name}}</h1>
+    <section id="color-selector">
+        @for (color of model.colors; track $index) {
+            <div (click)="switchColor($event, $index)">
+                <div [ngStyle]="{'background-color': color}" class="color-circle {{model.colors[selectedColorIndex] === color ? 'selected-color' : ''}}"></div>
+                <span>{{color}}</span>
+            </div>
+        }
+    </section>
+    <section id="icons">
+        <img src="{{model.details.os === 'Andronix' ? 'assets/andronix-icon.png' : 'assets/peach-icon.png'}}" alt="with {{model.details.os}} operating system" />
+        @if(model.details.network.has5g) {
+            <img src="assets/5g-icon.png" alt="5G compatible" />
+        }
+        <img src="assets/refresh-rate-{{model.details.display.refreshRate}}hz-icon.png" alt="with {{model.details.display.refreshRate}} Hz refresh rate" />
+    </section>
+    <p id="memory"><mat-icon>memory</mat-icon>{{model.details.memory.storages}} GB</p>
+    <p id="price" class="main-text accent-color-text">From €{{model.basePrice}}</p>
+    <section id="actions">
+        <button mat-raised-button color="primary" (click)="addToCart($event)"><mat-icon>shopping_cart</mat-icon>Add to cart</button>
+    </section>
+</mat-card>

@@ -42,6 +42,17 @@ a {
     font-size: style-definitions.$label-text;
 }
 
+/* text colors */
+.primary-color-text {
+    color: style-definitions.$primary-color;
+}
+.accent-color-text {
+    color: style-definitions.$accent-color;
+}
+.warn-color-text {
+    color: style-definitions.$warn-color;
+}
+
 /* snackbar panels */
 .mat-mdc-snack-bar-container {
     &.snackbar-info {
