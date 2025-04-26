@@ -1,4 +1,5 @@
 @use 'utilities/style-definitions.scss';
+@use '@angular/material' as mat;
 
 html, body { height: 100%; }
 body {
@@ -53,6 +54,14 @@ a {
     color: style-definitions.$warn-color;
 }
 
+/* other text stylings */
+.text-center {
+    text-align: center;
+}
+.text-bold {
+    font-weight: bold;
+}
+
 /* snackbar panels */
 .mat-mdc-snack-bar-container {
     &.snackbar-info {
@@ -86,3 +95,8 @@ a {
     }
 }
 
+/* checkbox colors */
+@include mat.checkbox-overrides((
+    label-text-color: style-definitions.$text-main,
+    unselected-icon-color: style-definitions.$text-main,
+));

@@ -9,6 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -36,6 +38,8 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
         MatInputModule,
         MatIconModule,
         MatCardModule,
+        MatCheckboxModule,
+        MatExpansionModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: !isDevMode(),
             // Register the ServiceWorker as soon as the application is stable
@@ -43,6 +47,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
             registrationStrategy: 'registerWhenStable:30000',
         }),
     ],
+    exports: [],
     providers: [],
     bootstrap: [AppComponent],
 })

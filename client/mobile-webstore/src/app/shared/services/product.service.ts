@@ -1,0 +1,130 @@
+import { Injectable } from '@angular/core';
+import { Model } from '../interfaces/Model';
+
+@Injectable({
+    providedIn: 'root',
+})
+export class ProductService {
+    constructor() {}
+
+    getModel(uuid: string | null): Model | null {
+        if (uuid === 'aa7a2e0137d04b2f93a9f4e12ede7041') {
+            return {
+                uuid: 'aa7a2e0137d04b2f93a9f4e12ede7041',
+                name: 'Samwox Galactica T25',
+                colors: ['black', 'grey', 'white'],
+                pictures: [
+                    'https://icatcare.org/img/asset/aW1hZ2VzL2N1dG91dHMvYWRvYmVzdG9ja18zMTYzODM5NjkucG5n/adobestock_316383969.png?p=default&s=86bb641e805a56548c51f3385510026b',
+                    'https://upload.wikimedia.org/wikipedia/commons/3/3d/EUR_cat_transparent.png',
+                    'https://mycatdna.com/cdn/shop/files/2024-07-02_MDD-MCD_Web_Breeder-Store_Homepage_Unleash_Cat.png?crop=center&height=1500&v=1720691279&width=1500',
+                ],
+                brand: 'Samwox',
+                basePrice: 829.99,
+                details: {
+                    cpu: {
+                        speed: 4.5,
+                        cores: 8,
+                    },
+                    display: {
+                        diameter: 6.2,
+                        resolution: '2340x1080 (FHD+)',
+                        technology: 'Dynamic AMOLED 2X',
+                        refreshRate: 120,
+                        colorDepth: '16M',
+                    },
+                    camera: {
+                        backResolution: '50.0 MP + 10.0 MP + 12.0 MP',
+                        backMaxZoom: 30,
+                        frontResolution: '12.0 MP',
+                        autofocus: true,
+                        flashlight: true,
+                        recordingMaxResolution: 'UHD 8K (7680 x 4320)',
+                    },
+                    memory: {
+                        ram: 12,
+                        storages: [128, 256, 512],
+                    },
+                    network: {
+                        simType: 'Nano-SIM',
+                        dualSim: true,
+                        has5g: true,
+                    },
+                    connection: {
+                        usb: 'Type-C',
+                        jack: false,
+                        wifi: '802.11a/b/g/n/ac/ax/be 2.4GHz+5GHz',
+                        bluetooth: 'v5.4',
+                        nfc: true,
+                    },
+                    physical: {
+                        height: 146.9,
+                        width: 70.5,
+                        depth: 7.2,
+                        weight: 162,
+                    },
+                    battery: 4000,
+                    os: 'Andronix',
+                },
+            };
+        } else if (uuid === '6bf7239f457b4a1aa493a40cb0ce029f') {
+            return {
+                uuid: '6bf7239f457b4a1aa493a40cb0ce029f',
+                name: 'Peach EyePhone 16',
+                colors: ['black', 'white', 'pink'],
+                pictures: [
+                    'https://m.media-amazon.com/images/I/71+mDoHG4mL.png',
+                    'https://catadoptionteam.org/wp-content/uploads/2019/05/Adopt-Fees-nobkgrd1.png',
+                    'https://icatcare.org/img/asset/aW1hZ2VzL2N1dG91dHMvdGlwcGVkLWVhci00LnBuZw/tipped-ear-4.png?p=default&s=1cc42cf458c54005bfec437d4b98507e',
+                ],
+                brand: 'Peach',
+                basePrice: 859.99,
+                details: {
+                    cpu: {
+                        speed: 4.04,
+                        cores: 6,
+                    },
+                    display: {
+                        diameter: 6.1,
+                        resolution: '2556x1179',
+                        technology: 'Super Retina XDR OLED',
+                        refreshRate: 60,
+                        colorDepth: '16M',
+                    },
+                    camera: {
+                        backResolution: '48.0 MP + 12.0 MP',
+                        backMaxZoom: 10,
+                        frontResolution: '12.0 MP',
+                        autofocus: true,
+                        flashlight: true,
+                        recordingMaxResolution: 'UHD 4K (3840 x 2160)',
+                    },
+                    memory: {
+                        ram: 8,
+                        storages: [128, 256, 512],
+                    },
+                    network: {
+                        simType: 'Nano-SIM',
+                        dualSim: true,
+                        has5g: true,
+                    },
+                    connection: {
+                        usb: 'Type-C',
+                        jack: false,
+                        wifi: '802.11a/b/g/n/ac/ax/be 2.4GHz+5GHz',
+                        bluetooth: 'v5.3',
+                        nfc: true,
+                    },
+                    physical: {
+                        height: 147.6,
+                        width: 71.6,
+                        depth: 7.8,
+                        weight: 170,
+                    },
+                    battery: 4000,
+                    os: 'EyeOS',
+                },
+            };
+        }
+        return null;
+    }
+}

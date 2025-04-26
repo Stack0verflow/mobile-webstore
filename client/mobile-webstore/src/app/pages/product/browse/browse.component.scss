@@ -2,18 +2,41 @@
 
 #browser {
     height: 100%;
+    display: flex;
 
     #filters {
         position: fixed;
         top: style-definitions.$menu-height;
         left: 0;
         width: 20%;
-        height: 100%;
+        height: calc(100% - style-definitions.$menu-height);
         border-right: 5px style-definitions.$extra-dark-gray solid;
+        overflow-y: auto;
+        box-sizing: border-box;
+        padding: 10px;
+        user-select: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        scrollbar-width: none;
+
+        h1 {
+            text-align: center;
+        }
+
+        .categories {
+            border-top: 3px style-definitions.$primary-color solid;
+        }
+
+        .subcategories {
+            margin: 0;
+        }
     }
 
     #content {
         margin-left: 20%;
+        width: 80%;
         display: flex;
         flex-direction: column;
 

@@ -1,6 +1,23 @@
 <div id="browser">
     <aside id="filters">
         <h1>Filters</h1>
+        @for (category of filterCategories; track $index) {
+            <h2 class="categories">{{ category }}</h2>
+            @for (key of filterKeys; track $index) {
+                @if (key[0] === category) {
+                    @for (name of key[1]; track $index) {
+                        <h3 class="subcategories">{{ name | filterKey }}</h3>
+                        @for (values of filterValues; track $index) {
+                            @if (values[0] === name && values[1].length > 0) {
+                                @for (value of values[1]; track $index) {
+                                    <mat-checkbox class="filter-values" color="primary">{{ value | detailValueDisplay }}</mat-checkbox>
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     </aside>
     <section id="content">
         <section id="quick-filters">

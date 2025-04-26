@@ -1,0 +1,125 @@
+@use '../../../../utilities/style-definitions.scss';
+
+#model {
+    width: min(1200px, 90%);
+    margin: 0 auto;
+    display: flex;
+
+    #model-picture {
+        width: 40%;
+        align-content: center;
+
+        img {
+            width: 100%;
+        }
+    }
+
+    #name {
+        margin: 20px auto;
+    }
+
+    #color-selector, #storage-selector {
+        display: flex;
+        margin-bottom: 10px;
+        justify-content: center;
+        align-items: center;
+        column-gap: 10px;
+
+        > div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            row-gap: 2px;
+        }
+
+        .color-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px transparent solid;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &.selected-color {
+                border: 2px style-definitions.$accent-color solid;
+            }
+        }
+
+        .storage-circle {
+            width: 50px;
+            height: 30px;
+            border-radius: 10px;
+            padding: 0 4px;
+            border: 2px transparent solid;
+            background-color: style-definitions.$light-gray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &.selected-storage {
+                border: 2px style-definitions.$accent-color solid;
+            }
+        }
+
+        span {
+            text-transform: capitalize;
+        }
+    }
+
+    #icons {
+        display: flex;
+        flex-direction: column;
+        column-gap: 10px;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+
+        img {
+            height: 40px;
+            margin: 10px auto 5px;
+        }
+    }
+
+    #storage {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+
+    #price {
+        margin: 20px auto;
+        font-weight: 500;
+    }
+
+    #actions {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+#technical-details {
+    width: min(1200px, 90%);
+    margin: 30px auto;
+    background-color: transparent;
+    box-shadow: none;
+    color: style-definitions.$text-main;
+    --mat-expansion-header-indicator-color: white;
+
+    .categories {
+        width: fit-content;
+        margin-top: 10px;
+        border-bottom: 3px style-definitions.$primary-color solid;
+    }
+
+    .detail-values {
+        display: flex;
+    }
+}

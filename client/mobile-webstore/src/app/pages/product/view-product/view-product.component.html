@@ -1,1 +1,60 @@
-<p>view-product works!</p>
+@if (selectedModel) {
+    <section id="model">
+        <div id="model-picture">
+            <img [src]="selectedModel.pictures[selectedColorIndex]" alt="{{ selectedModel.name }} - {{ selectedModel.colors[selectedColorIndex] }}"/>
+        </div>
+        <div>
+            <h1 id="name" class="main-text">{{selectedModel.name}}</h1>
+            <p class="secondary-text text-center">Available colors:</p>
+            <section id="color-selector">
+                @for (color of selectedModel.colors; track $index) {
+                    <div (click)="switchColor($event, $index)" tabindex="0" (keydown)="switchColor($event, $index)">
+                        <div [ngStyle]="{'background-color': color}" class="color-circle {{ selectedModel.colors[selectedColorIndex] === color ? 'selected-color' : '' }}"></div>
+                        <span>{{color}}</span>
+                    </div>
+                }
+            </section>
+
+            <p class="secondary-text text-center">Available storages:</p>
+            <section id="storage-selector">
+                @for (storage of selectedModel.details.memory.storages; track $index) {
+                    <div (click)="switchStorage($event, $index)" tabindex="0" (keydown)="switchStorage($event, $index)">
+                        <div class="storage-circle {{ selectedModel.details.memory.storages[selectedStorageIndex] === storage ? 'selected-storage' : ''  }}">
+                            <span>{{ storage }} GB</span>
+                        </div>
+                    </div>
+                }
+            </section>
+
+            <section id="icons">
+                <img src="{{ selectedModel.details.os === 'Andronix' ? 'assets/andronix-icon.png' : 'assets/peach-icon.png' }}" alt="with {{ selectedModel.details.os }} operating system" /><span>{{ selectedModel.details.os }} operating system</span>
+                @if (selectedModel.details.network.has5g) {
+                    <img src="assets/5g-icon.png" alt="5G compatible" /><span>5G compatible</span>
+                }
+                <img src="assets/refresh-rate-{{ selectedModel.details.display.refreshRate }}hz-icon.png" alt="with {{ selectedModel.details.display.refreshRate }} Hz refresh rate" /><span>{{ selectedModel.details.display.refreshRate }} Hz refresh rate</span>
+            </section>
+            <p id="price" class="main-text accent-color-text text-center">Available for €{{selectedModel.basePrice}}</p>
+            <section id="actions">
+                <button mat-raised-button color="primary" (click)="addToCart($event)"><mat-icon>shopping_cart</mat-icon>Add to cart</button>
+            </section>
+        </div>
+    </section>
+    <mat-expansion-panel togglePosition="before" id="technical-details">
+        <mat-expansion-panel-header>Technical details</mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+            @for (category of filterCategories; track $index) {
+                <h2 class="categories secondary-text">{{ category }}</h2>
+                @for (key of filterKeys; track $index) {
+                    @if (key[0] === category) {
+                        @for (name of key[1]; track $index) {
+                            <div class="detail-values">
+                                <p class="label-text"><span class="text-bold">{{ name | filterKey }}:</span> {{ getDetailValue(category, name).toString() | detailValueDisplay }}</p>
+                            </div>
+                        }
+                    }
+                }
+            }
+        </ng-template>
+    </mat-expansion-panel>
+}
+

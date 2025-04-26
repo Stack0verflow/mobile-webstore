@@ -3,7 +3,7 @@
     <h1 id="name" class="main-text">{{model.name}}</h1>
     <section id="color-selector">
         @for (color of model.colors; track $index) {
-            <div (click)="switchColor($event, $index)">
+            <div (click)="switchColor($event, $index)" tabindex="0" (keydown)="switchColor($event, $index)">
                 <div [ngStyle]="{'background-color': color}" class="color-circle {{model.colors[selectedColorIndex] === color ? 'selected-color' : ''}}"></div>
                 <span>{{color}}</span>
             </div>

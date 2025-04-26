@@ -22,7 +22,14 @@ export class ProductCardComponent {
     }
 
     switchColor(event: Event, colorIndex: number) {
-        event.stopPropagation();
-        this.selectedColorIndex = colorIndex;
+        if (
+            !(event instanceof KeyboardEvent) ||
+            event.key === ' ' ||
+            event.key === 'Enter'
+        ) {
+            event.stopPropagation();
+            event.preventDefault();
+            this.selectedColorIndex = colorIndex;
+        }
     }
 }
