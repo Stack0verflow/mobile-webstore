@@ -16,7 +16,24 @@ export const configurePassport = (passport: PassportStatic): PassportStatic => {
     passport.use(
         'local',
         new Strategy((username, password, done) => {
-            done('WIP');
+            const query = User.findOne({ email: username });
+            query
+                .then((user) => {
+                    if (user) {
+                        user.comparePassword(password, (error, isMatch) => {
+                            if (error || !isMatch) {
+                                done('Incorrect username or password.');
+                            } else {
+                                done(null, user);
+                            }
+                        });
+                    } else {
+                        done(null, undefined);
+                    }
+                })
+                .catch((error) => {
+                    done(error);
+                });
         })
     );
 

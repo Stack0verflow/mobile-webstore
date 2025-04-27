@@ -8,20 +8,53 @@ export const configureRoutes = (
     router: Router
 ): Router => {
     router.post('/login', (req: Request, res: Response, next: NextFunction) => {
-        passport.authenticate('local', (error: string | null, user: User) => {
-            if (error) {
-                res.status(500).send(error);
-            } else {
-                req.login(user, (err: string | null) => {
-                    if (err) {
-                        console.error(err);
-                        res.status(500).send('Internal server error.');
+        passport.authenticate(
+            'local',
+            (error: string | null, user: typeof User) => {
+                if (error) {
+                    res.status(500).send(error);
+                } else {
+                    if (!user) {
+                        res.status(400).send('User not found.');
                     } else {
-                        res.status(200).send(user);
+                        req.login(user, (err: string | null) => {
+                            if (err) {
+                                console.error(err);
+                                res.status(500).send('Internal server error.');
+                            } else {
+                                res.status(200).send(user);
+                            }
+                        });
                     }
-                });
+                }
             }
-        })(req, res, next);
+        )(req, res, next);
+    });
+
+    router.post('/signup', (req: Request, res: Response) => {
+        const uuid = null;
+        const email = req.body.email;
+        const password = req.body.password;
+        const adminToken = null;
+        const user = new User({
+            uuid: uuid,
+            email: email,
+            password: password,
+            adminToken: adminToken,
+        });
+        user.save()
+            .then((data) => {
+                res.status(200).send(data);
+            })
+            .catch((error) => {
+                if (error.code && error.code.toString() === '11000') {
+                    res.status(400).send(
+                        'This email address is already used by someone.'
+                    );
+                } else {
+                    res.status(500).send('Signup was not successful.');
+                }
+            });
     });
 
     router.post('/logout', (req: Request, res: Response) => {
