@@ -4,6 +4,7 @@ import { Model } from '../../../shared/interfaces/Model';
 import { ProductService } from '../../../shared/services/product.service';
 import { CommonService } from '../../../shared/services/common.service';
 import { environment } from '../../../../environments/environment';
+import { Product } from '../../../shared/interfaces/Product';
 
 @Component({
     selector: 'app-view-product',
@@ -16,6 +17,8 @@ export class ViewProductComponent implements OnInit {
     selectedModel: Model | null = null;
     selectedColorIndex: number = 0;
     selectedStorageIndex: number = 0;
+    selectedImageUrl: string = '';
+    actualProduct: Product | null = null;
 
     filterCategories: string[] = environment.filterCategories;
     filterKeys: Map<string, string[]> = environment.filterKeys;
@@ -29,30 +32,49 @@ export class ViewProductComponent implements OnInit {
 
     ngOnInit(): void {
         this.uuid = this.route.snapshot.queryParamMap.get('id');
-        this.selectedModel = this.getSelectedModel(this.uuid);
-        if (!this.selectedModel) {
-            this.router.navigate(['/product/browse']);
+        this.getSelectedModel(this.uuid);
+    }
+
+    getSelectedModel(uuid: string | null): void {
+        if (uuid) {
+            this.productService.getModel(uuid).subscribe({
+                next: (model) => {
+                    this.selectedModel = model;
+                    this.updatedSelectedImageUrl();
+                    this.getAvailableProduct();
+                },
+                error: (error) => {
+                    this.commonService.openSnackBarError(error);
+                    this.router.navigate(['/product/browse']);
+                },
+            });
         }
     }
 
-    getSelectedModel(uuid: string | null): Model | null {
-        return this.productService.getModel(uuid);
+    updatedSelectedImageUrl() {
+        this.selectedImageUrl =
+            this.selectedModel!.pictures[this.selectedColorIndex];
     }
 
     addToCart(event: Event) {
         event.stopPropagation();
-        this.commonService.addProductToCart(this.selectedModel!.uuid);
+        if (this.actualProduct) {
+            this.commonService.addProductToCart(this.actualProduct);
+        }
     }
 
     switchColor(event: Event, colorIndex: number) {
         if (
-            !(event instanceof KeyboardEvent) ||
-            event.key === ' ' ||
-            event.key === 'Enter'
+            this.selectedColorIndex !== colorIndex &&
+            (!(event instanceof KeyboardEvent) ||
+                event.key === ' ' ||
+                event.key === 'Enter')
         ) {
             event.stopPropagation();
             event.preventDefault();
             this.selectedColorIndex = colorIndex;
+            this.updatedSelectedImageUrl();
+            this.getAvailableProduct();
         }
     }
 
@@ -65,7 +87,27 @@ export class ViewProductComponent implements OnInit {
             event.stopPropagation();
             event.preventDefault();
             this.selectedStorageIndex = storageIndex;
+            this.getAvailableProduct();
         }
+    }
+
+    getAvailableProduct() {
+        this.productService
+            .getProductBySelection(
+                this.selectedModel!.uuid,
+                this.selectedModel!.colors[this.selectedColorIndex],
+                this.selectedModel!.details.memory.storages[
+                    this.selectedStorageIndex
+                ].toString()
+            )
+            .subscribe({
+                next: (product) => {
+                    this.actualProduct = product;
+                },
+                error: (error) => {
+                    this.commonService.openSnackBarError(error);
+                },
+            });
     }
 
     getDetailValue(category: string, name: string): string {

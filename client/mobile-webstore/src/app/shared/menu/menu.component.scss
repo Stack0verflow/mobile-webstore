@@ -40,10 +40,11 @@ nav {
             position: absolute;
             right: 0;
             transform: translate(25%, -25%);
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background-color: style-definitions.$warn-color;
+            align-content: flex-end;
 
             p {
                 margin: 0;

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonService } from '../services/common.service';
+import { Product } from '../interfaces/Product';
 
 @Component({
     selector: 'app-menu',
@@ -17,10 +18,9 @@ export class MenuComponent implements OnInit, OnDestroy {
             ? true
             : false;
 
-    cartItemNum: number =
-        localStorage.getItem('cart') && localStorage.getItem('cart') !== ''
-            ? localStorage.getItem('cart')!.split(';').length
-            : 0;
+    cartItemNum: number = localStorage.getItem('cart')
+        ? (JSON.parse(localStorage.getItem('cart')!) as Product[]).length
+        : 0;
 
     constructor(private commonService: CommonService) {}
 

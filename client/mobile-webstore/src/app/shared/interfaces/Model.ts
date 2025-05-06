@@ -32,7 +32,7 @@ export interface Model {
         network: {
             simType: string;
             dualSim: boolean;
-            has5g: boolean;
+            '5g': boolean;
         };
         connection: {
             usb: string;

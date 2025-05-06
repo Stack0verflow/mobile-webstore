@@ -11,7 +11,7 @@
     </section>
     <section id="icons">
         <img src="{{model.details.os === 'Andronix' ? 'assets/andronix-icon.png' : 'assets/peach-icon.png'}}" alt="with {{model.details.os}} operating system" />
-        @if(model.details.network.has5g) {
+        @if(model.details.network['5g']) {
             <img src="assets/5g-icon.png" alt="5G compatible" />
         }
         <img src="assets/refresh-rate-{{model.details.display.refreshRate}}hz-icon.png" alt="with {{model.details.display.refreshRate}} Hz refresh rate" />
@@ -19,6 +19,6 @@
     <p id="memory"><mat-icon>memory</mat-icon>{{model.details.memory.storages}} GB</p>
     <p id="price" class="main-text accent-color-text">From €{{model.basePrice}}</p>
     <section id="actions">
-        <button mat-raised-button color="primary" (click)="addToCart($event)"><mat-icon>shopping_cart</mat-icon>Add to cart</button>
+        <button mat-raised-button color="primary"><mat-icon>search</mat-icon>View product</button>
     </section>
 </mat-card>

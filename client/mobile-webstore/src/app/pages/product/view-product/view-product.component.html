@@ -1,7 +1,7 @@
 @if (selectedModel) {
     <section id="model">
         <div id="model-picture">
-            <img [src]="selectedModel.pictures[selectedColorIndex]" alt="{{ selectedModel.name }} - {{ selectedModel.colors[selectedColorIndex] }}"/>
+            <img [src]="selectedImageUrl" alt="{{ selectedModel.name }} - {{ selectedModel.colors[selectedColorIndex] }}"/>
         </div>
         <div>
             <h1 id="name" class="main-text">{{selectedModel.name}}</h1>
@@ -28,18 +28,18 @@
 
             <section id="icons">
                 <img src="{{ selectedModel.details.os === 'Andronix' ? 'assets/andronix-icon.png' : 'assets/peach-icon.png' }}" alt="with {{ selectedModel.details.os }} operating system" /><span>{{ selectedModel.details.os }} operating system</span>
-                @if (selectedModel.details.network.has5g) {
+                @if (selectedModel.details.network['5g']) {
                     <img src="assets/5g-icon.png" alt="5G compatible" /><span>5G compatible</span>
                 }
                 <img src="assets/refresh-rate-{{ selectedModel.details.display.refreshRate }}hz-icon.png" alt="with {{ selectedModel.details.display.refreshRate }} Hz refresh rate" /><span>{{ selectedModel.details.display.refreshRate }} Hz refresh rate</span>
             </section>
-            <p id="price" class="main-text accent-color-text text-center">Available for €{{selectedModel.basePrice}}</p>
+            <p id="price" class="main-text accent-color-text text-center">{{ actualProduct ? `Available for €${actualProduct.price}` : 'Currently not available' }}</p>
             <section id="actions">
-                <button mat-raised-button color="primary" (click)="addToCart($event)"><mat-icon>shopping_cart</mat-icon>Add to cart</button>
+                <button mat-raised-button color="primary" [disabled]="!this.actualProduct" (click)="addToCart($event)"><mat-icon>shopping_cart</mat-icon>Add to cart</button>
             </section>
         </div>
     </section>
-    <mat-expansion-panel togglePosition="before" id="technical-details">
+    <mat-expansion-panel togglePosition="before" expanded id="technical-details">
         <mat-expansion-panel-header>Technical details</mat-expansion-panel-header>
         <ng-template matExpansionPanelContent>
             @for (category of filterCategories; track $index) {

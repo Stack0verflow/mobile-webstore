@@ -16,11 +16,6 @@ export class ProductCardComponent {
 
     constructor(private commonService: CommonService) {}
 
-    addToCart(event: Event) {
-        event.stopPropagation();
-        this.commonService.addProductToCart(this.model.uuid);
-    }
-
     switchColor(event: Event, colorIndex: number) {
         if (
             !(event instanceof KeyboardEvent) ||

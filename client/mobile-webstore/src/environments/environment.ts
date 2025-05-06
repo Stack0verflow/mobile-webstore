@@ -1,5 +1,6 @@
 export const environment = {
     production: false,
+    apiBaseUrl: 'http://localhost:8080/app',
     filterCategories: [
         'General',
         'CPU',
@@ -35,7 +36,7 @@ export const environment = {
             ],
         ],
         ['Memory', ['ram', 'storages']],
-        ['Network', ['simType', 'dualSim', 'has5g']],
+        ['Network', ['simType', 'dualSim', '5g']],
         ['Connection', ['usb', 'jack', 'wifi', 'bluetooth', 'nfc']],
         ['Physical', ['height', 'width', 'depth', 'weight']],
     ]),
@@ -61,7 +62,7 @@ export const environment = {
         ['storages', []],
         ['simType', []],
         ['dualSim', []],
-        ['has5g', []],
+        ['5g', []],
         ['usb', []],
         ['jack', []],
         ['wifi', []],
