@@ -1,0 +1,43 @@
+@use '../../../../utilities/style-definitions.scss';
+
+#cart {
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    align-items: center;
+
+    .product {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 20px;
+        width: min(800px, 90%);
+        height: 200px;
+        background-color: style-definitions.$medium-gray;
+
+        img {
+            height: 100%;
+        }
+
+        .quantity {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            row-gap: 10px;
+
+            .quantity-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            p {
+                margin: 0 10px;
+                text-align: center;
+            }
+        }
+        }
+    }
+}

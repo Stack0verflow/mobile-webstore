@@ -33,9 +33,10 @@
                 }
                 <img src="assets/refresh-rate-{{ selectedModel.details.display.refreshRate }}hz-icon.png" alt="with {{ selectedModel.details.display.refreshRate }} Hz refresh rate" /><span>{{ selectedModel.details.display.refreshRate }} Hz refresh rate</span>
             </section>
-            <p id="price" class="main-text accent-color-text text-center">{{ actualProduct ? `Available for €${actualProduct.price}` : 'Currently not available' }}</p>
+            <p id="price" class="main-text accent-color-text text-center">{{ actualProduct && actualProduct.quantity > 0 ? `Available for €${actualProduct.price}` : 'Currently not available' }}</p>
+            <p class="label-text text-center">{{ actualProduct?.quantity ?? 0}} {{ actualProduct && actualProduct.quantity > 1 ? 'pieces' : 'piece' }} in stock</p>
             <section id="actions">
-                <button mat-raised-button color="primary" [disabled]="!this.actualProduct" (click)="addToCart($event)"><mat-icon>shopping_cart</mat-icon>Add to cart</button>
+                <button mat-raised-button color="primary" [disabled]="!this.actualProduct || this.actualProduct.quantity === 0" (click)="addToCart($event)"><mat-icon>shopping_cart</mat-icon>Add to cart</button>
             </section>
         </div>
     </section>

@@ -3,6 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { User } from '../interfaces/User';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Product } from '../interfaces/Product';
+import { CartItem } from '../interfaces/Cart';
 
 @Injectable({
     providedIn: 'root',
@@ -11,8 +12,8 @@ export class CommonService {
     currentUserSubject: Subject<User | null> = new Subject<User | null>();
     currentUser$: Observable<User | null> =
         this.currentUserSubject.asObservable();
-    cartItemsSubject: Subject<Product> = new Subject<Product>();
-    cartItems$: Observable<Product> = this.cartItemsSubject.asObservable();
+    cartItemsSubject: Subject<CartItem> = new Subject<CartItem>();
+    cartItems$: Observable<CartItem> = this.cartItemsSubject.asObservable();
 
     constructor(private snackBar: MatSnackBar) {}
 
@@ -22,21 +23,53 @@ export class CommonService {
     }
 
     addProductToCart(newProduct: Product) {
-        let cartProducts: Product[] = localStorage.getItem('cart')
+        const cartItems: CartItem[] = localStorage.getItem('cart')
             ? JSON.parse(localStorage.getItem('cart')!)
             : [];
 
         if (
-            !cartProducts.some(
-                (product) => product.serial === newProduct.serial
+            !cartItems.some(
+                (cartItem) => cartItem.product.serial === newProduct.serial
             )
         ) {
-            cartProducts.push(newProduct);
-            localStorage.setItem('cart', JSON.stringify(cartProducts));
-            this.cartItemsSubject.next(newProduct);
+            const newItem: CartItem = {
+                product: newProduct,
+                quantity: 1,
+            };
+            cartItems.push(newItem);
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            this.cartItemsSubject.next(newItem);
+        } else {
+            cartItems.map((cartItem) => {
+                if (cartItem.product.serial === newProduct.serial) {
+                    cartItem.quantity++;
+                    localStorage.setItem('cart', JSON.stringify(cartItems));
+                }
+            });
+        }
+    }
+
+    removeProductFromCart(product: Product): boolean {
+        const cartItems: CartItem[] = localStorage.getItem('cart')
+            ? JSON.parse(localStorage.getItem('cart')!)
+            : [];
+
+        const productIndex = cartItems.findIndex(
+            (item) => item.product.serial === product.serial
+        );
+
+        let isDeleted: boolean = false;
+        // delete the item from the cart if its current quantity was 1, else just reduce the value by one
+        if (cartItems[productIndex].quantity === 1) {
+            cartItems.splice(productIndex, 1);
+            isDeleted = true;
+        } else {
+            cartItems[productIndex].quantity--;
         }
 
-        console.log(cartProducts);
+        localStorage.setItem('cart', JSON.stringify(cartItems));
+
+        return isDeleted;
     }
 
     openSnackBarSuccess(

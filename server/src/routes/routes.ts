@@ -254,11 +254,11 @@ export const configureRoutes = (
         const {
             serial,
             model,
+            name,
             color,
             picture,
             storage,
             price,
-            arrivalDate,
             warranty,
         } = req.body;
 
@@ -266,31 +266,27 @@ export const configureRoutes = (
         if (
             !serial ||
             !model ||
+            !name ||
             !color ||
             !picture ||
             !storage ||
             !price ||
-            !arrivalDate ||
             !warranty
         ) {
             res.status(400).send('Missing required product fields.');
-        }
-
-        if (!(arrivalDate instanceof Date)) {
-            res.status(400).send('Arrival date must be a valid date.');
         }
 
         // Create the product
         const newProduct = new Product({
             serial,
             model,
+            name,
             color,
             picture,
             storage,
             price,
-            arrivalDate,
             warranty,
-            sellDate: null,
+            quantity: 0,
         });
 
         newProduct

@@ -58,7 +58,7 @@ export class ViewProductComponent implements OnInit {
 
     addToCart(event: Event) {
         event.stopPropagation();
-        if (this.actualProduct) {
+        if (this.actualProduct && this.actualProduct.quantity > 0) {
             this.commonService.addProductToCart(this.actualProduct);
         }
     }
