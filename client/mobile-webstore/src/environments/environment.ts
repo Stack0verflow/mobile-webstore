@@ -1,6 +1,10 @@
 export const environment = {
     production: false,
     apiBaseUrl: 'http://localhost:8080/app',
+    regex: {
+        password: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\s]).{8,}$/,
+        email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,255}$/,
+    },
     filterCategories: [
         'General',
         'CPU',

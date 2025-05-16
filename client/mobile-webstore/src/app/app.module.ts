@@ -15,16 +15,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { MenuComponent } from './shared/menu/menu.component';
-import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        MenuComponent,
-        HomeComponent,
-        NotFoundComponent,
-    ],
+    declarations: [AppComponent, MenuComponent, NotFoundComponent],
     imports: [
         BrowserModule,
         AppRoutingModule,

@@ -4,12 +4,10 @@ import { User } from '../model/User';
 
 export const configurePassport = (passport: PassportStatic): PassportStatic => {
     passport.serializeUser((user: Express.User, done) => {
-        console.log('User is serialized.');
         done(null, user);
     });
 
     passport.deserializeUser((user: Express.User, done) => {
-        console.log('User is deserialized.');
         done(null, user);
     });
 

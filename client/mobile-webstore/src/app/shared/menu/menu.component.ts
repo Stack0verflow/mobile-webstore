@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonService } from '../services/common.service';
 import { CartItem } from '../interfaces/Cart';
+import { User } from '../interfaces/User';
 
 @Component({
     selector: 'app-menu',
@@ -12,11 +13,9 @@ import { CartItem } from '../interfaces/Cart';
 export class MenuComponent implements OnInit, OnDestroy {
     destroy$: Subject<boolean> = new Subject<boolean>();
 
-    isUserLoggedIn: boolean =
-        localStorage.getItem('current-user') &&
-        localStorage.getItem('current-user') !== 'null'
-            ? true
-            : false;
+    currentUser: User | null = localStorage.getItem('current-user')
+        ? JSON.parse(localStorage.getItem('current-user')!)
+        : null;
 
     cartItemNum: number = localStorage.getItem('cart')
         ? (JSON.parse(localStorage.getItem('cart')!) as CartItem[]).length
@@ -29,7 +28,7 @@ export class MenuComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (currentUser) => {
-                    this.isUserLoggedIn = currentUser ? true : false;
+                    this.currentUser = currentUser;
                 },
             });
 

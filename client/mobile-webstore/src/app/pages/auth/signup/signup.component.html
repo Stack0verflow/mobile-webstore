@@ -1,1 +1,56 @@
-<p>signup works!</p>
+<main>
+    <h1>Create a new account</h1>
+        <form id="signup-form" [formGroup]="signupForm" (ngSubmit)="signup()">
+            <mat-form-field color="primary">
+                <mat-label>E-mail address: </mat-label>
+                <input matInput type="email" formControlName="email" />
+                <mat-error *ngIf="signupForm.controls.email.hasError('pattern')">Invalid e-mail address!</mat-error>
+            </mat-form-field>
+            <mat-form-field color="primary"
+                ><mat-label>Password: </mat-label>
+                <input matInput [type]="hidePasswordSignup ? 'password' : 'text'" formControlName="password" required />
+                <button
+                    type="button"
+                    mat-icon-button
+                    color="primary"
+                    matSuffix
+                    (click)="hidePasswordSignup = !hidePasswordSignup"
+                    [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hidePasswordSignup">
+                    <mat-icon>{{ hidePasswordSignup ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error *ngIf="signupForm.controls.password.hasError('required')"
+                    >You have to fill in this field!</mat-error
+                >
+                <mat-error *ngIf="signupForm.controls.password.hasError('pattern')">Invalid password!</mat-error>
+            </mat-form-field>
+            <mat-form-field color="primary"
+                ><mat-label>Confirmation password: </mat-label>
+                <input matInput [type]="hideConfirmPasswordSignup ? 'password' : 'text'" formControlName="confirmPassword" required />
+                <button
+                    type="button"
+                    mat-icon-button
+                    color="primary"
+                    matSuffix
+                    (click)="hideConfirmPasswordSignup = !hideConfirmPasswordSignup"
+                    [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hideConfirmPasswordSignup">
+                    <mat-icon>{{ hideConfirmPasswordSignup ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error *ngIf="signupForm.controls.confirmPassword.hasError('required')">
+                    You have to fill in this field!
+                </mat-error>
+                <mat-error *ngIf="signupForm.controls.confirmPassword.hasError('pattern')">
+                    Invalid confirmation password!
+                </mat-error>
+                <mat-error *ngIf="signupForm.controls.confirmPassword.hasError('mustMatch')">
+                    The two passwords are not the same!
+                </mat-error>
+            </mat-form-field>
+            <br />
+            <button mat-raised-button color="primary" type="submit" [disabled]="!signupForm.valid">Sign up</button>
+            <p id="login-text" class="secondary-text">
+                Already have an account? Log in <a routerLink="../login">here</a> to your account!
+            </p>
+        </form>
+</main>

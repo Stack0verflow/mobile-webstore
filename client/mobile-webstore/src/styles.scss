@@ -61,6 +61,9 @@ a {
 .text-bold {
     font-weight: bold;
 }
+.margin-header {
+    margin: 20px auto !important;
+}
 
 /* snackbar panels */
 .mat-mdc-snack-bar-container {
@@ -100,3 +103,12 @@ a {
     label-text-color: style-definitions.$text-main,
     unselected-icon-color: style-definitions.$text-main,
 ));
+
+/* input colors */
+.mat-mdc-text-field-wrapper {
+    background-color: style-definitions.$background-main !important;
+    input, .mdc-floating-label {
+        color: style-definitions.$text-main !important;
+    }
+}
+

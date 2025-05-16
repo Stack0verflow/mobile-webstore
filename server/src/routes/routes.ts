@@ -57,26 +57,35 @@ export const configureRoutes = (
             })
             .catch((error) => {
                 if (error.code && error.code.toString() === '11000') {
-                    res.status(400).send(
-                        'This email address is already used by someone.'
-                    );
+                    res.status(400).send({
+                        message:
+                            'This email address is already used by someone.',
+                    });
                 } else {
                     res.status(500).send('Signup was not successful.');
                 }
             });
     });
 
-    router.post('/logout', (req: Request, res: Response) => {
+    router.get('/logout', (req: Request, res: Response) => {
         if (req.isAuthenticated()) {
             req.logout((error) => {
                 if (error) {
                     console.error(error);
                     res.status(500).send('Internal server error.');
                 }
-                res.status(200).send('Successfully logged out.');
+                res.status(200).send({ message: 'Successfully logged out.' });
             });
         } else {
-            res.status(500).send('User is not logged in.');
+            res.status(400).send('User is not logged in.');
+        }
+    });
+
+    router.get('/get-user', (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            res.status(200).send(req.user);
+        } else {
+            res.status(401).send(null);
         }
     });
     //#endregion

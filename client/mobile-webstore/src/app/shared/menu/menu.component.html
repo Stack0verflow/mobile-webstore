@@ -1,5 +1,4 @@
 <nav>
-    <a routerLink="home"><mat-icon>home</mat-icon><span>Home</span></a>
     <a routerLink="product/browse"><mat-icon>phone_android</mat-icon><span>Browse</span></a>
     <a routerLink="order/cart">
         <mat-icon>shopping_cart</mat-icon>
@@ -8,6 +7,7 @@
             <div id="cart-item-number"><p class="label-text">{{ cartItemNum }}</p></div>
         }
     </a>
-    <a *ngIf="isUserLoggedIn" routerLink="user/profile"><mat-icon>person</mat-icon><span>Profile</span></a>
-    <a *ngIf="!isUserLoggedIn" routerLink="user/login"><mat-icon>person</mat-icon><span>Login</span></a>
+    <a *ngIf="currentUser && currentUser.adminToken" routerLink="admin/menu"><mat-icon>person</mat-icon><span>Admin</span></a>
+    <a *ngIf="currentUser && !currentUser.adminToken" routerLink="user/profile"><mat-icon>person</mat-icon><span>Profile</span></a>
+    <a *ngIf="!currentUser" routerLink="user/login"><mat-icon>person</mat-icon><span>Login</span></a>
 </nav>
