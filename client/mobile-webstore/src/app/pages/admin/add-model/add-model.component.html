@@ -1,0 +1,241 @@
+<main>
+    <h1 class="text-center margin-header">Create new model</h1>
+    <form [formGroup]="modelForm" (ngSubmit)="addModel()">
+        <h2>Base data</h2>
+        <section class="groups">
+            <mat-form-field color="primary">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+                <mat-error *ngIf="modelForm.get('name')?.hasError('required')">You have to fill in this field!</mat-error>
+            </mat-form-field>
+
+            <mat-form-field color="primary">
+                <mat-label>Brand</mat-label>
+                <input matInput formControlName="brand" required>
+                <mat-error *ngIf="modelForm.get('brand')?.hasError('required')">You have to fill in this field!</mat-error>
+            </mat-form-field>
+
+            <mat-form-field color="primary">
+                <mat-label>Base Price</mat-label>
+                <input matInput type="number" min="0" formControlName="basePrice" required>
+                <mat-error *ngIf="modelForm.get('basePrice')?.hasError('required')">You have to fill in this field!</mat-error>
+            </mat-form-field>
+        </section>
+
+        <div id="colors-div">
+            <h3>Colors</h3>
+            <div class="color-list">
+                @for (color of colors; track $index) {
+                    <div>
+                        <p>{{ color }}</p>
+                        <button mat-icon-button color="warn" type="button" (click)="removeColor(color)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                }
+            </div>
+            <mat-form-field color="primary">
+                <mat-label>Color</mat-label>
+                <input matInput formControlName="color">
+            </mat-form-field>
+            <button id="add-color-button" mat-raised-button color="primary" type="button" (click)="addColor()">Add color</button>
+        </div>
+
+        <div id="pictures-div">
+            <h3>Pictures</h3>
+            <div formGroupName="pictures">
+                @for (color of colors; track $index) {
+                    <div class="picture">
+                        <mat-form-field>
+                            <mat-label>Picture {{ $index + 1 }}</mat-label>
+                            <input matInput type="text" [formControlName]="'picture' + ($index + 1)" required>
+                            <mat-error *ngIf="modelForm.get('pictures.picture' + ($index + 1))?.hasError('required')">You have to fill in this field!</mat-error>
+                            <mat-error *ngIf="modelForm.get('pictures.picture' + ($index + 1))?.hasError('invalidUrl')">Invalid image URL!</mat-error>
+                        </mat-form-field>
+                        <img [src]="modelForm.get('pictures.picture' + ($index + 1))?.value" alt="picture{{ $index + 1 }}" (error)="onImgError($event, ($index + 1))" />
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Details -->
+        <div formGroupName="details">
+            <!-- CPU -->
+            <h3>CPU</h3>
+            <section formGroupName="cpu" class="groups">
+                <mat-form-field>
+                    <mat-label>Speed (GHz)</mat-label>
+                    <input matInput type="number" min="0" formControlName="speed" required>
+                    <mat-error *ngIf="modelForm.get('details.cpu.speed')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Cores</mat-label>
+                    <input matInput type="number" min="0" formControlName="cores" required>
+                    <mat-error *ngIf="modelForm.get('details.cpu.cores')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+            </section>
+
+            <!-- Display -->
+            <h3>Display</h3>
+            <section formGroupName="display" class="groups">
+                <mat-form-field>
+                    <mat-label>Diameter</mat-label>
+                    <input matInput type="number" min="0" formControlName="diameter" required>
+                    <mat-error *ngIf="modelForm.get('details.display.diameter')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Resolution</mat-label>
+                    <input matInput formControlName="resolution" required>
+                    <mat-error *ngIf="modelForm.get('details.display.resolution')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Technology</mat-label>
+                    <input matInput formControlName="technology" required>
+                    <mat-error *ngIf="modelForm.get('details.display.technology')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Refresh Rate</mat-label>
+                    <input matInput type="number" min="0" formControlName="refreshRate" required>
+                    <mat-error *ngIf="modelForm.get('details.display.refreshRate')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Color Depth</mat-label>
+                    <input matInput formControlName="colorDepth" required>
+                    <mat-error *ngIf="modelForm.get('details.display.colorDepth')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+            </section>
+
+            <!-- Camera -->
+            <h3>Camera</h3>
+            <section formGroupName="camera" class="groups">
+                <mat-form-field>
+                    <mat-label>Back Resolution</mat-label>
+                    <input matInput formControlName="backResolution" required>
+                    <mat-error *ngIf="modelForm.get('details.camera.backResolution')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Back Max Zoom</mat-label>
+                    <input matInput type="number" min="0" formControlName="backMaxZoom" required>
+                    <mat-error *ngIf="modelForm.get('details.camera.backMaxZoom')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Front Resolution</mat-label>
+                    <input matInput formControlName="frontResolution" required>
+                    <mat-error *ngIf="modelForm.get('details.camera.frontResolution')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+
+                <mat-checkbox formControlName="autofocus" color="primary">Autofocus</mat-checkbox>
+                <mat-checkbox formControlName="flashlight" color="primary">Flashlight</mat-checkbox>
+
+                <mat-form-field>
+                    <mat-label>Recording Max Resolution</mat-label>
+                    <input matInput formControlName="recordingMaxResolution" required>
+                    <mat-error *ngIf="modelForm.get('details.camera.recordingMaxResolution')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+            </section>
+
+            <!-- Memory -->
+            <h3>Memory</h3>
+            <section formGroupName="memory">
+                <mat-form-field>
+                    <mat-label>RAM (GB)</mat-label>
+                    <input matInput type="number" min="0" formControlName="ram" required>
+                    <mat-error *ngIf="modelForm.get('details.memory.ram')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <div id="storages-div">
+                    <h3>Storages (GB)</h3>
+                    <div class="storage-list">
+                        @for (storage of storages; track $index) {
+                            <div>
+                                <p>{{ storage }}</p>
+                                <button mat-icon-button color="warn" type="button" (click)="removeStorage(storage)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                    <mat-form-field color="primary">
+                        <mat-label>Storage</mat-label>
+                        <input matInput formControlName="storage">
+                    </mat-form-field>
+                    <button id="add-storage-button" mat-raised-button color="primary" type="button" (click)="addStorage()">Add storage</button>
+                </div>
+            </section>
+
+            <!-- Network -->
+            <h3>Network</h3>
+            <section formGroupName="network" class="groups">
+                <mat-form-field>
+                    <mat-label>SIM Type</mat-label>
+                    <input matInput formControlName="simType" required>
+                    <mat-error *ngIf="modelForm.get('details.network.simType')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-checkbox formControlName="dualSim" color="primary">Dual SIM</mat-checkbox>
+                <mat-checkbox formControlName="5g" color="primary">5G</mat-checkbox>
+            </section>
+
+            <!-- Connection -->
+            <h3>Connection</h3>
+            <section formGroupName="connection" class="groups">
+                <mat-form-field>
+                    <mat-label>USB</mat-label>
+                    <input matInput formControlName="usb" required>
+                    <mat-error *ngIf="modelForm.get('details.connection.usb')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>WiFi</mat-label>
+                    <input matInput formControlName="wifi" required>
+                    <mat-error *ngIf="modelForm.get('details.connection.wifi')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Bluetooth</mat-label>
+                    <input matInput formControlName="bluetooth" required>
+                    <mat-error *ngIf="modelForm.get('details.connection.bluetooth')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-checkbox formControlName="jack" color="primary">Jack</mat-checkbox>
+                <mat-checkbox formControlName="nfc" color="primary">NFC</mat-checkbox>
+            </section>
+
+            <!-- Physical -->
+            <h3>Physical</h3>
+            <section formGroupName="physical" class="groups">
+                <mat-form-field>
+                    <mat-label>Height (mm)</mat-label>
+                    <input matInput type="number" min="0" formControlName="height" required>
+                    <mat-error *ngIf="modelForm.get('details.physical.height')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Width (mm)</mat-label>
+                    <input matInput type="number" min="0" formControlName="width" required>
+                    <mat-error *ngIf="modelForm.get('details.physical.width')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Depth (mm)</mat-label>
+                    <input matInput type="number" min="0" formControlName="depth" required>
+                    <mat-error *ngIf="modelForm.get('details.physical.depth')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Weight (g)</mat-label>
+                    <input matInput type="number" min="0" formControlName="weight" required>
+                    <mat-error *ngIf="modelForm.get('details.physical.weight')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+            </section>
+
+            <!-- Battery & OS -->
+            <section class="groups">
+                <mat-form-field>
+                    <mat-label>Battery (mAh)</mat-label>
+                    <input matInput type="number" min="0" formControlName="battery" required>
+                    <mat-error *ngIf="modelForm.get('details.battery')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Operating System</mat-label>
+                    <input matInput formControlName="os" required>
+                    <mat-error *ngIf="modelForm.get('details.os')?.hasError('required')">You have to fill in this field!</mat-error>
+                </mat-form-field>
+            </section>
+        </div>
+        <button id="add-button" mat-raised-button color="primary" type="submit" [disabled]="!modelForm.valid">Add Model</button>
+    </form>
+</main>

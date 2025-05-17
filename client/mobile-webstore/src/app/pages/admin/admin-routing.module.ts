@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AddProductComponent } from './add-product/add-product.component';
 import { ModifyProductComponent } from './modify-product/modify-product.component';
 import { AdminMainComponent } from './admin-main/admin-main.component';
+import { AddModelComponent } from './add-model/add-model.component';
+import { ModifyModelComponent } from './modify-model/modify-model.component';
 
 const routes: Routes = [
     {
@@ -11,9 +12,14 @@ const routes: Routes = [
         title: 'Admin menu - OneMobile',
     },
     {
-        path: 'add-product',
-        component: AddProductComponent,
-        title: 'Add product - OneMobile',
+        path: 'add-model',
+        component: AddModelComponent,
+        title: 'Add model - OneMobile',
+    },
+    {
+        path: 'modify-model',
+        component: ModifyModelComponent,
+        title: 'Modify model - OneMobile',
     },
     {
         path: 'modify-product',

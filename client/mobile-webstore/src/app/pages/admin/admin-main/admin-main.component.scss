@@ -1,0 +1,50 @@
+@use '../../../../utilities/style-definitions.scss';
+
+main {
+    width: 90%;
+    margin: 0 auto;
+
+    #models, #products {
+        margin: 10px 0 30px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        column-gap: 20px;
+        row-gap: 20px;
+
+        mat-card {
+            height: min(250px, fit-content);
+            width: 300px;
+            padding: 10px;
+            background-color: style-definitions.$medium-gray;
+
+            &:hover {
+                background-color: style-definitions.$light-gray;
+            }
+
+            p {
+                margin: 2px;
+            }
+
+            .picture {
+                height: 120px;
+                width: fit-content;
+                align-self: center;
+            }
+
+            .name {
+                margin: 5px auto;
+            }
+
+            .price {
+                margin: 10px auto;
+                font-weight: 500;
+            }
+
+            .actions {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+}

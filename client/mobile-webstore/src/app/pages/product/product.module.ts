@@ -26,5 +26,6 @@ import { DetailValueDisplayPipe } from '../../shared/pipes/detail-value-display.
         FilterKeyPipe,
         DetailValueDisplayPipe,
     ],
+    exports: [ProductCardComponent],
 })
 export class ProductModule {}

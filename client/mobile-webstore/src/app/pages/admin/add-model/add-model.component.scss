@@ -1,0 +1,74 @@
+@use '../../../../utilities/style-definitions.scss';
+
+main {
+    width: 80%;
+    margin: 0 auto;
+
+    .groups {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        column-gap: 1%;
+    }
+
+    mat-form-field {
+        width: 20%;
+    }
+
+    #colors-div, #storages-div {
+        display: flex;
+        flex-direction: column;
+
+        .color-list, .storage-list {
+            display: flex;
+            flex-direction: row;
+            column-gap: 10px;
+            margin-bottom: 10px;
+
+            div {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                background-color: style-definitions.$light-gray;
+                border-radius: 8px;
+                border: 2px style-definitions.$accent-color solid;
+
+                p {
+                    margin: 0 0 0 10px;
+                }
+            }
+        }
+
+        #add-color-button, #add-storage-button {
+            width: fit-content;
+            margin-bottom: 20px;
+        }
+    }
+
+    #add-button {
+        display: flex;
+        justify-self: center;
+    }
+
+    #pictures-div {
+        display: flex;
+        flex-direction: column;
+
+        .picture {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            column-gap: 1%;
+            margin: 10px 0;
+
+            mat-form-field {
+                width: 60%;
+            }
+
+            img {
+                height: 150px;
+            }
+        }
+    }
+}

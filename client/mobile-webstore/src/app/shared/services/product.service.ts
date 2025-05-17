@@ -4,6 +4,7 @@ import { Model } from '../interfaces/Model';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { Product } from '../interfaces/Product';
+import { User } from '../interfaces/User';
 
 @Injectable({
     providedIn: 'root',
@@ -33,6 +34,75 @@ export class ProductService {
         });
     }
 
+    createModel(
+        user: User,
+        name: string,
+        colors: string[],
+        pictures: string[],
+        brand: string,
+        details: object,
+        basePrice: number,
+        storages: number[]
+    ): Observable<any> {
+        const body = new URLSearchParams();
+        body.set('user', JSON.stringify(user));
+        body.set('name', name);
+        body.set('colors', JSON.stringify(colors));
+        body.set('pictures', JSON.stringify(pictures));
+        body.set('brand', brand);
+        body.set('details', JSON.stringify(details));
+        body.set('basePrice', basePrice.toString());
+        body.set('storages', JSON.stringify(storages));
+
+        console.log(body);
+
+        return this.http.post<any>(this.baseUrl + '/model/create', body, {
+            headers: this.headers,
+            withCredentials: true,
+        });
+    }
+
+    updateModel(
+        user: User,
+        uuid: string,
+        name: string,
+        colors: string[],
+        pictures: string[],
+        brand: string,
+        details: object,
+        basePrice: number,
+        storages: number[]
+    ): Observable<any> {
+        const body = new URLSearchParams();
+        body.set('user', JSON.stringify(user));
+        body.set('uuid', uuid);
+        body.set('name', name);
+        body.set('colors', JSON.stringify(colors));
+        body.set('pictures', JSON.stringify(pictures));
+        body.set('brand', brand);
+        body.set('details', JSON.stringify(details));
+        body.set('basePrice', basePrice.toString());
+        body.set('storages', JSON.stringify(storages));
+
+        console.log(body);
+
+        return this.http.post<any>(this.baseUrl + '/model/update', body, {
+            headers: this.headers,
+            withCredentials: true,
+        });
+    }
+
+    deleteModel(user: User, uuid: string) {
+        const body = new URLSearchParams();
+        body.set('user', JSON.stringify(user));
+        body.set('uuid', uuid);
+
+        return this.http.post<any>(this.baseUrl + '/model/delete', body, {
+            headers: this.headers,
+            withCredentials: true,
+        });
+    }
+
     getProductBySelection(
         model: string,
         color: string,
@@ -51,5 +121,12 @@ export class ProductService {
                 withCredentials: true,
             }
         );
+    }
+
+    getAllProducts(): Observable<Product[]> {
+        return this.http.get<Product[]>(this.baseUrl + '/product/get-all', {
+            headers: this.headers,
+            withCredentials: true,
+        });
     }
 }

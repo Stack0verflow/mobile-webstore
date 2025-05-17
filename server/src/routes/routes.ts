@@ -122,89 +122,336 @@ export const configureRoutes = (
     });
 
     router.post('/model/create', (req: Request, res: Response) => {
-        const { name, colors, pictures, brand, details, basePrice } = req.body;
+        if (req.isAuthenticated()) {
+            const {
+                user,
+                name,
+                colors,
+                pictures,
+                brand,
+                details,
+                basePrice,
+                storages,
+            } = req.body;
 
-        if (
-            !name ||
-            !Array.isArray(colors) ||
-            (Array.isArray(colors) && colors.length === 0) ||
-            !Array.isArray(pictures) ||
-            (Array.isArray(pictures) && pictures.length === 0) ||
-            !brand ||
-            !details ||
-            !basePrice
-        ) {
-            res.status(400).send('Missing required fields to create model.');
+            const userParsed = JSON.parse(user);
+            const colorsArray = JSON.parse(colors);
+            const picturesArray = JSON.parse(pictures);
+            const detailsParsed = JSON.parse(details);
+            const storagesArray = JSON.parse(storages);
+
+            const query = User.findOne({ uuid: userParsed.uuid });
+            query
+                .then((dbUser) => {
+                    if (
+                        !userParsed.adminToken ||
+                        userParsed.adminToken !== dbUser?.adminToken
+                    ) {
+                        res.status(401).send('Unauthorized action!');
+                    } else if (
+                        !name ||
+                        !Array.isArray(colorsArray) ||
+                        (Array.isArray(colorsArray) &&
+                            colorsArray.length === 0) ||
+                        !Array.isArray(picturesArray) ||
+                        (Array.isArray(picturesArray) &&
+                            picturesArray.length === 0) ||
+                        !brand ||
+                        !detailsParsed ||
+                        !Array.isArray(storagesArray) ||
+                        (Array.isArray(storagesArray) &&
+                            storagesArray.length === 0) ||
+                        !basePrice
+                    ) {
+                        res.status(400).send(
+                            'Missing required fields to create model.'
+                        );
+                    } else if (colorsArray.length !== picturesArray.length) {
+                        res.status(400).send(
+                            'Colors and pictures count must match.'
+                        );
+                    } else {
+                        const newModel = new Model_({
+                            uuid: null,
+                            name,
+                            colors: colorsArray,
+                            pictures: picturesArray,
+                            brand,
+                            details: {
+                                cpu: {
+                                    speed: detailsParsed.cpu.speed,
+                                    cores: detailsParsed.cpu.cores,
+                                },
+                                display: {
+                                    diameter: detailsParsed.display.diameter,
+                                    resolution:
+                                        detailsParsed.display.resolution,
+                                    technology:
+                                        detailsParsed.display.technology,
+                                    refreshRate:
+                                        detailsParsed.display.refreshRate,
+                                    colorDepth:
+                                        detailsParsed.display.colorDepth,
+                                },
+                                camera: {
+                                    backResolution:
+                                        detailsParsed.camera.backResolution,
+                                    backMaxZoom:
+                                        detailsParsed.camera.backMaxZoom,
+                                    frontResolution:
+                                        detailsParsed.camera.frontResolution,
+                                    autofocus: detailsParsed.camera.autofocus,
+                                    flashlight: detailsParsed.camera.flashlight,
+                                    recordingMaxResolution:
+                                        detailsParsed.camera
+                                            .recordingMaxResolution,
+                                },
+                                memory: {
+                                    ram: detailsParsed.memory.ram,
+                                    storages: storagesArray,
+                                },
+                                network: {
+                                    simType: detailsParsed.network.simType,
+                                    dualSim: detailsParsed.network.dualSim,
+                                    '5g': detailsParsed.network['5g'],
+                                },
+                                connection: {
+                                    usb: detailsParsed.connection.usb,
+                                    jack: detailsParsed.connection.jack,
+                                    wifi: detailsParsed.connection.wifi,
+                                    bluetooth:
+                                        detailsParsed.connection.bluetooth,
+                                    nfc: detailsParsed.connection.nfc,
+                                },
+                                physical: {
+                                    height: detailsParsed.physical.height,
+                                    width: detailsParsed.physical.width,
+                                    depth: detailsParsed.physical.depth,
+                                    weight: detailsParsed.physical.weight,
+                                },
+                                battery: detailsParsed.battery,
+                                os: detailsParsed.os,
+                            },
+                            basePrice,
+                        });
+
+                        newModel
+                            .save()
+                            .then((data) => {
+                                for (let i = 0; i < colorsArray.length; i++) {
+                                    const newProduct = new Product({
+                                        serial: Math.floor(
+                                            Math.random() * 1_000_000_000
+                                        ).toString(),
+                                        model_: data.uuid,
+                                        name,
+                                        color: colorsArray[i],
+                                        picture: picturesArray[i],
+                                        storage:
+                                            storagesArray[
+                                                i % storagesArray.length
+                                            ],
+                                        price: basePrice,
+                                        warranty: '24',
+                                        quantity: 0,
+                                    });
+
+                                    newProduct
+                                        .save()
+                                        .then()
+                                        .catch((error) => {
+                                            console.error(error);
+                                        });
+                                }
+
+                                res.status(201).send(data);
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                                res.status(500).send(
+                                    'Saving the model was not successful.'
+                                );
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    res.status(500).send('Server error.');
+                });
+        } else {
+            res.status(400).send('User is not logged in.');
         }
+    });
 
-        if (colors.length !== pictures.length) {
-            res.status(400).send('Colors and pictures count must match.');
+    router.post('/model/update', (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            const {
+                user,
+                uuid,
+                name,
+                colors,
+                pictures,
+                brand,
+                details,
+                basePrice,
+                storages,
+            } = req.body;
+
+            const userParsed = JSON.parse(user);
+            const colorsArray = JSON.parse(colors);
+            const picturesArray = JSON.parse(pictures);
+            const detailsParsed = JSON.parse(details);
+            const storagesArray = JSON.parse(storages);
+
+            const query = User.findOne({ uuid: userParsed.uuid });
+            query
+                .then((dbUser) => {
+                    if (
+                        !userParsed.adminToken ||
+                        userParsed.adminToken !== dbUser?.adminToken
+                    ) {
+                        res.status(401).send('Unauthorized action!');
+                    } else if (
+                        !name ||
+                        !uuid ||
+                        !Array.isArray(colorsArray) ||
+                        (Array.isArray(colorsArray) &&
+                            colorsArray.length === 0) ||
+                        !Array.isArray(picturesArray) ||
+                        (Array.isArray(picturesArray) &&
+                            picturesArray.length === 0) ||
+                        !brand ||
+                        !detailsParsed ||
+                        !Array.isArray(storagesArray) ||
+                        (Array.isArray(storagesArray) &&
+                            storagesArray.length === 0) ||
+                        !basePrice
+                    ) {
+                        res.status(400).send(
+                            'Missing required fields to create model.'
+                        );
+                    } else if (colorsArray.length !== picturesArray.length) {
+                        res.status(400).send(
+                            'Colors and pictures count must match.'
+                        );
+                    } else {
+                        const newModel = {
+                            uuid: uuid,
+                            name,
+                            colors: colorsArray,
+                            pictures: picturesArray,
+                            brand,
+                            details: {
+                                cpu: {
+                                    speed: detailsParsed.cpu.speed,
+                                    cores: detailsParsed.cpu.cores,
+                                },
+                                display: {
+                                    diameter: detailsParsed.display.diameter,
+                                    resolution:
+                                        detailsParsed.display.resolution,
+                                    technology:
+                                        detailsParsed.display.technology,
+                                    refreshRate:
+                                        detailsParsed.display.refreshRate,
+                                    colorDepth:
+                                        detailsParsed.display.colorDepth,
+                                },
+                                camera: {
+                                    backResolution:
+                                        detailsParsed.camera.backResolution,
+                                    backMaxZoom:
+                                        detailsParsed.camera.backMaxZoom,
+                                    frontResolution:
+                                        detailsParsed.camera.frontResolution,
+                                    autofocus: detailsParsed.camera.autofocus,
+                                    flashlight: detailsParsed.camera.flashlight,
+                                    recordingMaxResolution:
+                                        detailsParsed.camera
+                                            .recordingMaxResolution,
+                                },
+                                memory: {
+                                    ram: detailsParsed.memory.ram,
+                                    storages: storagesArray,
+                                },
+                                network: {
+                                    simType: detailsParsed.network.simType,
+                                    dualSim: detailsParsed.network.dualSim,
+                                    '5g': detailsParsed.network['5g'],
+                                },
+                                connection: {
+                                    usb: detailsParsed.connection.usb,
+                                    jack: detailsParsed.connection.jack,
+                                    wifi: detailsParsed.connection.wifi,
+                                    bluetooth:
+                                        detailsParsed.connection.bluetooth,
+                                    nfc: detailsParsed.connection.nfc,
+                                },
+                                physical: {
+                                    height: detailsParsed.physical.height,
+                                    width: detailsParsed.physical.width,
+                                    depth: detailsParsed.physical.depth,
+                                    weight: detailsParsed.physical.weight,
+                                },
+                                battery: detailsParsed.battery,
+                                os: detailsParsed.os,
+                            },
+                            basePrice,
+                        };
+
+                        const query = Model_.findOneAndUpdate(
+                            { uuid },
+                            newModel
+                        );
+
+                        query
+                            .then((data) => {
+                                res.status(200).send(data);
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                                res.status(500).send(
+                                    'Saving the model was not successful.'
+                                );
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    res.status(500).send('Server error.');
+                });
+        } else {
+            res.status(400).send('User is not logged in.');
         }
+    });
 
-        const newModel = new Model_({
-            uuid: null,
-            name,
-            colors,
-            pictures,
-            brand,
-            details: {
-                cpu: {
-                    speed: details.cpu.speed,
-                    cores: details.cpu.cores,
-                },
-                display: {
-                    diameter: details.display.diameter,
-                    resolution: details.display.resolution,
-                    technology: details.display.technology,
-                    refreshRate: details.display.refreshRate,
-                    colorDepth: details.display.colorDepth,
-                },
-                camera: {
-                    backResolution: details.camera.backResolution,
-                    backMaxZoom: details.camera.backMaxZoom,
-                    frontResolution: details.camera.frontResolution,
-                    autofocus: details.camera.autofocus,
-                    flashlight: details.camera.flashlight,
-                    recordingMaxResolution:
-                        details.camera.recordingMaxResolution,
-                },
-                memory: {
-                    ram: details.memory.ram,
-                    storages: details.memory.storages,
-                },
-                network: {
-                    simType: details.network.simType,
-                    dualSim: details.network.dualSim,
-                    '5g': details.network['5g'],
-                },
-                connection: {
-                    usb: details.connection.usb,
-                    jack: details.connection.jack,
-                    wifi: details.connection.wifi,
-                    bluetooth: details.connection.bluetooth,
-                    nfc: details.connection.nfc,
-                },
-                physical: {
-                    height: details.physical.height,
-                    width: details.physical.width,
-                    depth: details.physical.depth,
-                    weight: details.physical.weight,
-                },
-                battery: details.battery,
-                os: details.os,
-            },
-            basePrice,
-        });
+    router.post('/model/delete', (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            const { user, uuid } = req.body;
+            const userParsed = JSON.parse(user);
 
-        newModel
-            .save()
-            .then((data) => {
-                res.status(201).send(data);
-            })
-            .catch((error) => {
-                console.error(error);
-                res.status(500).send('Saving the model was not successful.');
+            const query = User.findOne({ uuid: userParsed.uuid });
+            query.then((dbUser) => {
+                if (
+                    !userParsed.adminToken ||
+                    userParsed.adminToken !== dbUser?.adminToken
+                ) {
+                    res.status(401).send('Unauthorized action!');
+                } else {
+                    const query = Model_.deleteOne({ uuid });
+                    query
+                        .then((data) => {
+                            res.status(200).send(data);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            res.status(500).send('Internal server error.');
+                        });
+                }
             });
+        } else {
+            res.status(400).send('User is not logged in.');
+        }
     });
     //#endregion
 

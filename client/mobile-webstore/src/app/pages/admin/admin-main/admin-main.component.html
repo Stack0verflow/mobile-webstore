@@ -1,1 +1,35 @@
-<p>admin-main works!</p>
+<main>
+    <h1 class="text-center margin-header">Admin menu</h1>
+    <h2>Current models</h2>
+    <button mat-flat-button color="primary" routerLink="../add-model"><mat-icon>add</mat-icon>Add new</button>
+    <section id="models">
+        @for (model of models; track $index) {
+            <mat-card tabindex="0">
+                <img class="picture" [src]="model.pictures[0]" alt="{{model.name}}"/>
+                <h1 class="name main-text">{{ model.name }}</h1>
+                <p class="secondary-text text-center">Brand: {{ model.brand }}</p>
+                <p class="secondary-text text-center">Colors: {{ model.colors.toString() | detailValueDisplay }}</p>
+                <p class="price secondary-text accent-color-text">Base price: €{{ model.basePrice }}</p>
+                <section class="actions">
+                    <button mat-raised-button color="primary" routerLink="../modify-model" [queryParams]="{id: model.uuid}"><mat-icon>edit</mat-icon>Edit model</button>
+                </section>
+            </mat-card>
+        }
+    </section>
+    <h2>Current products</h2>
+    <section id="products">
+        @for (product of products; track $index) {
+            <mat-card tabindex="0">
+                <img class="picture" [src]="product.picture" alt="{{product.name}}"/>
+                <h1 class="name main-text">{{ product.name }}</h1>
+                <p class="secondary-text text-center">Serial: {{ product.serial }}</p>
+                <p class="secondary-text text-center">Storage: {{ product.storage }}GB</p>
+                <p class="secondary-text text-center">Quantity: {{ product.quantity }}</p>
+                <p class="price secondary-text accent-color-text">Price: €{{ product.price }}</p>
+                <section class="actions">
+                    <button mat-raised-button color="primary" routerLink="../modify-product" [queryParams]="{serial: product.serial}"><mat-icon>edit</mat-icon>Edit product</button>
+                </section>
+            </mat-card>
+        }
+    </section>
+</main>
