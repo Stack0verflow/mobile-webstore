@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../interfaces/User';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -54,5 +54,20 @@ export class AuthService {
             headers: this.headers,
             withCredentials: true,
         });
+    }
+
+    isUserAdmin(): Observable<boolean> {
+        const user = localStorage.getItem('current-user');
+        if (user) {
+            const body = new URLSearchParams();
+            body.set('user', user);
+
+            return this.http.post<boolean>(this.baseUrl + '/admin-auth', body, {
+                headers: this.headers,
+                withCredentials: true,
+            });
+        } else {
+            return of(false);
+        }
     }
 }

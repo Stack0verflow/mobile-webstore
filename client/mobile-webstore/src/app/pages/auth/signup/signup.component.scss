@@ -14,16 +14,6 @@ main {
 
     #login-text {
         margin: 20px 0;
-
-        & a {
-            text-decoration: none;
-            color: style-definitions.$primary-color;
-            font-weight: bold;
-
-            &:hover {
-                text-decoration: underline;
-            }
-        }
     }
 
 }

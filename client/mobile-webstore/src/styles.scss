@@ -15,11 +15,13 @@ img {
 }
 
 a {
-    color: style-definitions.$warn-color;
+    color: style-definitions.$accent-color;
     transition: 0.2s ease-in-out all;
+    text-decoration: none;
 
     &:hover {
         color: style-definitions.$primary-color;
+        text-decoration: underline;
     }
 }
 

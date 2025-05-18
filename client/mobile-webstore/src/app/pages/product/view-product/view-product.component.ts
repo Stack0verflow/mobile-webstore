@@ -5,6 +5,9 @@ import { ProductService } from '../../../shared/services/product.service';
 import { CommonService } from '../../../shared/services/common.service';
 import { environment } from '../../../../environments/environment';
 import { Product } from '../../../shared/interfaces/Product';
+import { User } from '../../../shared/interfaces/User';
+import { AuthService } from '../../../shared/services/auth.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-view-product',
@@ -13,7 +16,11 @@ import { Product } from '../../../shared/interfaces/Product';
     styleUrl: './view-product.component.scss',
 })
 export class ViewProductComponent implements OnInit {
+    destroy$: Subject<boolean> = new Subject<boolean>();
+
     uuid: string | null = null;
+    currentUser: User | null = null;
+
     selectedModel: Model | null = null;
     selectedColorIndex: number = 0;
     selectedStorageIndex: number = 0;
@@ -26,13 +33,29 @@ export class ViewProductComponent implements OnInit {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
+        private authService: AuthService,
         private productService: ProductService,
         private commonService: CommonService
     ) {}
 
     ngOnInit(): void {
         this.uuid = this.route.snapshot.queryParamMap.get('id');
+        this.getCurrentUser();
         this.getSelectedModel(this.uuid);
+    }
+
+    getCurrentUser() {
+        this.authService
+            .getCurrentUser()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: (user) => {
+                    this.currentUser = user;
+                },
+                error: () => {
+                    this.currentUser = null;
+                },
+            });
     }
 
     getSelectedModel(uuid: string | null): void {

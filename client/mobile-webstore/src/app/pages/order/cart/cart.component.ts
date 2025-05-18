@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from '../../../shared/interfaces/Product';
 import { CartItem } from '../../../shared/interfaces/Cart';
 import { CommonService } from '../../../shared/services/common.service';
+import { User } from '../../../shared/interfaces/User';
+import { AuthService } from '../../../shared/services/auth.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-cart',
@@ -9,16 +12,39 @@ import { CommonService } from '../../../shared/services/common.service';
     templateUrl: './cart.component.html',
     styleUrl: './cart.component.scss',
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, OnDestroy {
+    destroy$: Subject<boolean> = new Subject<boolean>();
+
+    currentUser: User | null = null;
     cartItems: CartItem[] = localStorage.getItem('cart')
         ? JSON.parse(localStorage.getItem('cart')!)
         : [];
     totalPriceText: string = 'Calculating...';
 
-    constructor(private commonService: CommonService) {}
+    constructor(
+        private commonService: CommonService,
+        private authService: AuthService
+    ) {}
 
     ngOnInit(): void {
-        this.calculateTotalPrice();
+        this.getCurrentUser();
+    }
+
+    getCurrentUser() {
+        this.authService
+            .getCurrentUser()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: (user) => {
+                    this.currentUser = user;
+                    if (this.currentUser) {
+                        this.calculateTotalPrice();
+                    }
+                },
+                error: () => {
+                    this.currentUser = null;
+                },
+            });
     }
 
     calculateTotalPrice() {
@@ -54,5 +80,10 @@ export class CartComponent implements OnInit {
             }
         }
         this.calculateTotalPrice();
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
     }
 }

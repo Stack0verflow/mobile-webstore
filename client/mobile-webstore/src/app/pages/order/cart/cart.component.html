@@ -1,29 +1,38 @@
 <section id=cart>
     <h1>Your cart</h1>
-    @if (cartItems.length === 0) {
-        <p class="main-text">Your cart is currently empty.</p>
-    }
-    @for (item of cartItems; track $index) {
-        <mat-card class="product">
-            <img [src]="item.product.picture" alt="{{ item.product.name }} - {{ item.product.color }}"/>
-            <div>
-                <h2>{{ item.product.name }}</h2>
-                <p>Color: {{ item.product.color }}</p>
-                <p>Storage size: {{ item.product.storage }} GB</p>
-                <p>Warranty: {{ item.product.warranty }} months</p>
-            </div>
-            <div class="quantity">
-                <div class="quantity-actions">
-                    <button mat-mini-fab color="warn" (click)="modifyProductQuantity(item.product, false)"><mat-icon>remove</mat-icon></button>
-                    <p class="main-text">{{ item.quantity }}</p>
-                    <button mat-mini-fab color="primary" (click)="modifyProductQuantity(item.product)"><mat-icon>add</mat-icon></button>
+    @if (!currentUser) {
+        <p class="secondary-text">Your are not logged in.
+            <a routerLink="/user/login" aria-label="login page" class="text-bold">Log in</a>
+             to your account or
+             <a routerLink="/user/signup" aria-label="signup page" class="text-bold">sign up</a>
+              to order some new mobiles!
+        </p>
+    } @else {
+        @if (cartItems.length === 0) {
+            <p class="main-text">Your cart is currently empty.</p>
+        }
+        @for (item of cartItems; track $index) {
+            <mat-card class="product">
+                <img [src]="item.product.picture" alt="{{ item.product.name }} - {{ item.product.color }}"/>
+                <div>
+                    <h2>{{ item.product.name }}</h2>
+                    <p>Color: {{ item.product.color }}</p>
+                    <p>Storage size: {{ item.product.storage }} GB</p>
+                    <p>Warranty: {{ item.product.warranty }} months</p>
                 </div>
-                <p class="secondary-text">€{{ item.product.price * item.quantity | number: '1.0-3' }}</p>
-            </div>
-        </mat-card>
+                <div class="quantity">
+                    <div class="quantity-actions">
+                        <button mat-mini-fab color="warn" (click)="modifyProductQuantity(item.product, false)"><mat-icon>remove</mat-icon></button>
+                        <p class="main-text">{{ item.quantity }}</p>
+                        <button mat-mini-fab color="primary" (click)="modifyProductQuantity(item.product)"><mat-icon>add</mat-icon></button>
+                    </div>
+                    <p class="secondary-text">€{{ item.product.price * item.quantity | number: '1.0-3' }}</p>
+                </div>
+            </mat-card>
+        }
+        <section id="checkout">
+            <p class="main-text text-center">Total price: €{{ totalPriceText }} </p>
+            <button mat-flat-button color="primary" [hidden]="cartItems.length === 0" routerLink="../order">Proceed to checkout</button>
+        </section>
     }
-    <section id="checkout">
-        <p class="main-text text-center">Total price: €{{ totalPriceText }} </p>
-        <button mat-flat-button color="primary" routerLink="../order">Proceed to checkout</button>
-    </section>
 </section>

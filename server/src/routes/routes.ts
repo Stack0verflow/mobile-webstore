@@ -88,6 +88,25 @@ export const configureRoutes = (
             res.status(401).send(null);
         }
     });
+
+    router.post('/admin-auth', (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            const userParsed = JSON.parse(req.body.user);
+            const query = User.findOne({ uuid: userParsed.uuid });
+            query.then((dbUser) => {
+                if (
+                    !userParsed.adminToken ||
+                    userParsed.adminToken !== dbUser?.adminToken
+                ) {
+                    res.status(401).send(false);
+                } else {
+                    res.status(200).send(true);
+                }
+            });
+        } else {
+            res.status(401).send(false);
+        }
+    });
     //#endregion
 
     //#region model
@@ -729,7 +748,7 @@ export const configureRoutes = (
             orderTime: orderTime,
             status: 'ordered',
             deliveryTime: null,
-            estimatedDelivery: null,
+            estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
             paymentTime: null,
             shippingTime: null,
             transactionId: null,
