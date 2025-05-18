@@ -9,7 +9,6 @@ interface IAddress {
     zip: string;
     street: string;
     houseNumber: string;
-    isPO?: boolean;
 }
 
 interface IContact {
@@ -24,12 +23,9 @@ interface IOrder extends Document {
     products: string[];
     shippingAddress: IAddress;
     shippingMethod: string;
-    shippingCost: number;
     billingAddress: Omit<IAddress, 'isPO'>;
     paymentMethod: string;
     paymentStatus: string;
-    subtotal: number;
-    tax: number;
     total: number;
     orderTime: Date;
     status: string;
@@ -49,7 +45,6 @@ const addressSchema: Schema = new Schema({
     zip: { type: String, required: true },
     street: { type: String, required: true },
     houseNumber: { type: String, required: true },
-    isPO: { type: Boolean, required: false },
 });
 
 const contactSchema: Schema = new Schema({
@@ -65,23 +60,9 @@ const orderSchema: Schema = new Schema(
         products: [{ type: String, required: true }],
         shippingAddress: { type: addressSchema, required: true },
         shippingMethod: { type: String, required: true },
-        shippingCost: { type: Number, required: true },
-        billingAddress: {
-            type: new Schema({
-                firstName: { type: String, required: true },
-                lastName: { type: String, required: true },
-                country: { type: String, required: true },
-                city: { type: String, required: true },
-                zip: { type: String, required: true },
-                street: { type: String, required: true },
-                houseNumber: { type: String, required: true },
-            }),
-            required: true,
-        },
+        billingAddress: { type: addressSchema, required: true },
         paymentMethod: { type: String, required: true },
         paymentStatus: { type: String, required: true },
-        subtotal: { type: Number, required: true },
-        tax: { type: Number, required: true },
         total: { type: Number, required: true },
         orderTime: { type: Date, required: true },
         status: { type: String, required: true },

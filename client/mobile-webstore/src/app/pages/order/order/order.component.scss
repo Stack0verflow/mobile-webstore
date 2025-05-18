@@ -1,0 +1,22 @@
+@use '../../../../utilities/style-definitions.scss';
+
+main {
+    width: 80%;
+    margin: 0 auto;
+
+    .groups {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        column-gap: 1%;
+    }
+
+    mat-form-field {
+        width: 20%;
+    }
+
+    #order-button {
+        display: flex;
+        justify-self: center;
+    }
+}

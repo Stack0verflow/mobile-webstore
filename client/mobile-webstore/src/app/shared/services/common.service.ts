@@ -12,8 +12,9 @@ export class CommonService {
     currentUserSubject: Subject<User | null> = new Subject<User | null>();
     currentUser$: Observable<User | null> =
         this.currentUserSubject.asObservable();
-    cartItemsSubject: Subject<CartItem> = new Subject<CartItem>();
-    cartItems$: Observable<CartItem> = this.cartItemsSubject.asObservable();
+    cartItemsSubject: Subject<CartItem | null> = new Subject<CartItem | null>();
+    cartItems$: Observable<CartItem | null> =
+        this.cartItemsSubject.asObservable();
 
     constructor(private snackBar: MatSnackBar) {}
 
@@ -70,6 +71,11 @@ export class CommonService {
         localStorage.setItem('cart', JSON.stringify(cartItems));
 
         return isDeleted;
+    }
+
+    emptyCart() {
+        localStorage.removeItem('cart');
+        this.cartItemsSubject.next(null);
     }
 
     openSnackBarSuccess(

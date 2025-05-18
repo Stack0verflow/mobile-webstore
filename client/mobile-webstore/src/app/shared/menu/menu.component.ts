@@ -33,8 +33,12 @@ export class MenuComponent implements OnInit, OnDestroy {
             });
 
         this.commonService.cartItems$.pipe(takeUntil(this.destroy$)).subscribe({
-            next: () => {
-                this.cartItemNum++;
+            next: (cartItem) => {
+                if (cartItem) {
+                    this.cartItemNum++;
+                } else {
+                    this.cartItemNum = 0;
+                }
             },
         });
     }

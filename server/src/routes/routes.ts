@@ -6,6 +6,7 @@ import { Model_ } from '../model/Model';
 import { Product } from '../model/Product';
 import { Order } from '../model/Order';
 import multer from 'multer';
+import { randomBytes } from 'crypto';
 
 // save files to memory, not to disk
 const storage = multer.memoryStorage();
@@ -673,97 +674,90 @@ export const configureRoutes = (
     });
 
     router.post('/order/create', (req: Request, res: Response) => {
-        const {
-            user,
-            contact,
-            products,
-            shippingAddress,
-            shippingMethod,
-            shippingCost,
-            billingAddress,
-            paymentMethod,
-            paymentStatus,
-            subtotal,
-            tax,
-            total,
-            orderTime,
-        } = req.body;
+        if (req.isAuthenticated()) {
+            const {
+                user,
+                contact,
+                products,
+                shippingAddress,
+                shippingMethod,
+                billingAddress,
+                paymentMethod,
+                total,
+            } = req.body;
 
-        if (
-            !user ||
-            !contact ||
-            !products ||
-            !shippingAddress ||
-            !shippingMethod ||
-            !shippingCost ||
-            !billingAddress ||
-            !paymentMethod ||
-            !paymentStatus ||
-            !subtotal ||
-            !tax ||
-            !total ||
-            !orderTime
-        ) {
-            res.status(400).send('Missing required order fields.');
+            const userParsed = JSON.parse(user);
+            const contactParsed = JSON.parse(contact);
+            const productsArray = JSON.parse(products);
+            const shippingAddressParsed = JSON.parse(shippingAddress);
+            const billingAddressParsed = JSON.parse(billingAddress);
+
+            if (
+                !userParsed ||
+                !contactParsed ||
+                !productsArray ||
+                !shippingAddressParsed ||
+                !shippingMethod ||
+                !billingAddressParsed ||
+                !paymentMethod ||
+                !total
+            ) {
+                res.status(400).send('Missing required order fields.');
+            } else {
+                const newOrder = new Order({
+                    uuid: null,
+                    user: userParsed.uuid,
+                    contact: {
+                        email: contactParsed.email,
+                        phone: contactParsed.phone,
+                    },
+                    products: productsArray,
+                    shippingAddress: shippingAddressParsed,
+                    shippingMethod: shippingMethod,
+                    billingAddress: billingAddressParsed,
+                    paymentMethod: paymentMethod,
+                    paymentStatus: 'paid',
+                    total,
+                    orderTime: new Date(),
+                    status: 'ordered',
+                    deliveryTime: null,
+                    estimatedDelivery: new Date(
+                        Date.now() + 3 * 24 * 60 * 60 * 1000
+                    ),
+                    paymentTime: new Date(),
+                    shippingTime: null,
+                    transactionId: randomBytes(16).toString('hex'),
+                    confirmationTime: null,
+                });
+
+                newOrder
+                    .save()
+                    .then((data) => {
+                        const query = Product.updateMany(
+                            { serial: { $in: productsArray } },
+                            { $inc: { quantity: -1 } }
+                        );
+
+                        query
+                            .then(() => {
+                                res.status(201).send(data);
+                            })
+                            .catch(() => {
+                                res.status(500).send(
+                                    'An error occurred during ordering.'
+                                );
+                            });
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        res.status(500).send(
+                            'Saving the order was not successful.'
+                        );
+                    });
+            }
+        } else {
+            res.status(400).send('User is not logged in.');
         }
-
-        if (!(orderTime instanceof Date)) {
-            res.status(400).send('Arrival date must be a valid date.');
-        }
-
-        const newOrder = new Order({
-            uuid: null,
-            user,
-            contact: {
-                email: contact.email,
-                phone: contact.phone,
-            },
-            products,
-            shippingAddress: {
-                firstName: shippingAddress.firstName,
-                lastName: shippingAddress.lastName,
-                country: shippingAddress.country,
-                city: shippingAddress.city,
-                zip: shippingAddress.zip,
-                street: shippingAddress.street,
-                houseNumber: shippingAddress.houseNumber,
-                isPO: shippingAddress.isPO,
-            },
-            shippingMethod: shippingMethod,
-            shippingCost: shippingCost,
-            billingAddress: {
-                firstName: billingAddress.firstName,
-                lastName: billingAddress.lastName,
-                country: billingAddress.country,
-                city: billingAddress.city,
-                zip: billingAddress.zip,
-                street: billingAddress.street,
-                houseNumber: billingAddress.houseNumber,
-            },
-            paymentMethod: paymentMethod,
-            paymentStatus: paymentStatus,
-            subtotal,
-            tax,
-            total,
-            orderTime: orderTime,
-            status: 'ordered',
-            deliveryTime: null,
-            estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-            paymentTime: null,
-            shippingTime: null,
-            transactionId: null,
-            confirmationTime: null,
-        });
-
-        newOrder
-            .save()
-            .then((data) => {
-                res.status(201).send(data);
-            })
-            .catch((error) => {
-                console.error(error);
-                res.status(500).send('Saving the order was not successful.');
-            });
     });
     //#endregion
 

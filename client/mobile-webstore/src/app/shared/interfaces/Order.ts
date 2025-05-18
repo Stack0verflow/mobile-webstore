@@ -15,10 +15,8 @@ export interface Order {
         zip: string;
         street: string;
         houseNumber: string;
-        isPo: boolean;
     };
     shippingMethod: string;
-    shippingCost: number;
     billingAddress: {
         firstName: string;
         lastName: string;
@@ -30,8 +28,6 @@ export interface Order {
     };
     paymentMethod: string;
     paymentStatus: string;
-    subtotal: number;
-    tax: number;
     total: number;
     orderTime: string;
     paymentTime: string;
