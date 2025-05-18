@@ -54,8 +54,6 @@ export class ProductService {
         body.set('basePrice', basePrice.toString());
         body.set('storages', JSON.stringify(storages));
 
-        console.log(body);
-
         return this.http.post<any>(this.baseUrl + '/model/create', body, {
             headers: this.headers,
             withCredentials: true,
@@ -84,8 +82,6 @@ export class ProductService {
         body.set('basePrice', basePrice.toString());
         body.set('storages', JSON.stringify(storages));
 
-        console.log(body);
-
         return this.http.post<any>(this.baseUrl + '/model/update', body, {
             headers: this.headers,
             withCredentials: true,
@@ -101,6 +97,20 @@ export class ProductService {
             headers: this.headers,
             withCredentials: true,
         });
+    }
+
+    getProductBySerial(serial: string): Observable<Product> {
+        const body = new URLSearchParams();
+        body.set('serial', serial);
+
+        return this.http.post<Product>(
+            this.baseUrl + '/product/get-by-serial',
+            body,
+            {
+                headers: this.headers,
+                withCredentials: true,
+            }
+        );
     }
 
     getProductBySelection(
@@ -125,6 +135,26 @@ export class ProductService {
 
     getAllProducts(): Observable<Product[]> {
         return this.http.get<Product[]>(this.baseUrl + '/product/get-all', {
+            headers: this.headers,
+            withCredentials: true,
+        });
+    }
+
+    updateProduct(
+        user: User,
+        serial: string,
+        price: number,
+        warranty: number,
+        quantity: number
+    ) {
+        const body = new URLSearchParams();
+        body.set('user', JSON.stringify(user));
+        body.set('serial', serial);
+        body.set('price', price.toString());
+        body.set('warranty', warranty.toString());
+        body.set('quantity', quantity.toString());
+
+        return this.http.post<any>(this.baseUrl + '/product/update', body, {
             headers: this.headers,
             withCredentials: true,
         });

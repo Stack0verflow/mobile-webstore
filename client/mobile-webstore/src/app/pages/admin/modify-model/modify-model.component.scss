@@ -4,6 +4,11 @@ main {
     width: 80%;
     margin: 0 auto;
 
+    #delete-button {
+        display: flex;
+        justify-self: center;
+    }
+
     .groups {
         display: flex;
         flex-direction: row;

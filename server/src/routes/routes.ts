@@ -438,10 +438,17 @@ export const configureRoutes = (
                 ) {
                     res.status(401).send('Unauthorized action!');
                 } else {
-                    const query = Model_.deleteOne({ uuid });
+                    const query = Model_.findOneAndDelete({ uuid });
                     query
-                        .then((data) => {
-                            res.status(200).send(data);
+                        .then((model) => {
+                            const query = Product.deleteMany({
+                                model_: model?.uuid,
+                            });
+                            query.then(() => {
+                                res.status(200).send({
+                                    message: 'Model deleted successfully.',
+                                });
+                            });
                         })
                         .catch((error) => {
                             console.log(error);
@@ -507,53 +514,111 @@ export const configureRoutes = (
     });
 
     router.post('/product/create', (req: Request, res: Response) => {
-        const {
-            serial,
-            model,
-            name,
-            color,
-            picture,
-            storage,
-            price,
-            warranty,
-        } = req.body;
+        if (req.isAuthenticated()) {
+            const {
+                serial,
+                model,
+                name,
+                color,
+                picture,
+                storage,
+                price,
+                warranty,
+            } = req.body;
 
-        // Validate required fields
-        if (
-            !serial ||
-            !model ||
-            !name ||
-            !color ||
-            !picture ||
-            !storage ||
-            !price ||
-            !warranty
-        ) {
-            res.status(400).send('Missing required product fields.');
-        }
+            // Validate required fields
+            if (
+                !serial ||
+                !model ||
+                !name ||
+                !color ||
+                !picture ||
+                !storage ||
+                !price ||
+                !warranty
+            ) {
+                res.status(400).send('Missing required product fields.');
+            }
 
-        // Create the product
-        const newProduct = new Product({
-            serial,
-            model,
-            name,
-            color,
-            picture,
-            storage,
-            price,
-            warranty,
-            quantity: 0,
-        });
-
-        newProduct
-            .save()
-            .then((data) => {
-                res.status(201).send(data);
-            })
-            .catch((error) => {
-                console.error(error);
-                res.status(500).send('Saving the product was not successful.');
+            // Create the product
+            const newProduct = new Product({
+                serial,
+                model,
+                name,
+                color,
+                picture,
+                storage,
+                price,
+                warranty,
+                quantity: 0,
             });
+
+            newProduct
+                .save()
+                .then((data) => {
+                    res.status(201).send(data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    res.status(500).send(
+                        'Saving the product was not successful.'
+                    );
+                });
+        } else {
+            res.status(400).send('User is not logged in.');
+        }
+    });
+
+    router.post('/product/update', (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            const { user, serial, price, warranty, quantity } = req.body;
+
+            const userParsed = JSON.parse(user);
+
+            const query = User.findOne({ uuid: userParsed.uuid });
+            query
+                .then((dbUser) => {
+                    if (
+                        !userParsed.adminToken ||
+                        userParsed.adminToken !== dbUser?.adminToken
+                    ) {
+                        res.status(401).send('Unauthorized action!');
+                    } else if (!serial || !price || !warranty || !quantity) {
+                        res.status(400).send(
+                            'Missing required product fields.'
+                        );
+                    } else {
+                        const query = Product.findOneAndUpdate(
+                            { serial },
+                            {
+                                $set: {
+                                    price,
+                                    warranty,
+                                    quantity,
+                                },
+                            },
+                            { new: true }
+                        );
+
+                        query
+                            .then((data) => {
+                                res.status(200).send(data);
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                                res.status(500).send(
+                                    'Updating the product was not successful.'
+                                );
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    res.status(500).send('Server error.');
+                });
+        } else {
+            res.status(400).send('User is not logged in.');
+        }
     });
     //#endregion
 

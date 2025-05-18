@@ -350,7 +350,6 @@ export class ModifyModelComponent implements OnInit, OnDestroy {
         const form = this.modelForm;
 
         if (form && form.valid) {
-            console.log(form.controls.name.value);
             this.productService
                 .updateModel(
                     this.currentUser!,
@@ -366,7 +365,6 @@ export class ModifyModelComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this.destroy$))
                 .subscribe({
                     next: (model) => {
-                        console.log(model);
                         this.commonService.openSnackBarSuccess(
                             'Model updated!'
                         );
@@ -379,6 +377,23 @@ export class ModifyModelComponent implements OnInit, OnDestroy {
                     },
                 });
         }
+    }
+
+    deleteModel() {
+        this.productService
+            .deleteModel(this.currentUser!, this.selectedModel!.uuid)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: (message) => {
+                    this.commonService.openSnackBarSuccess(message.message);
+                    this.router.navigate(['admin/menu']);
+                },
+                error: () => {
+                    this.commonService.openSnackBarError(
+                        'Could not delete the selected model!'
+                    );
+                },
+            });
     }
 
     ngOnDestroy(): void {

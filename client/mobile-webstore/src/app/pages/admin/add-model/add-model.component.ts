@@ -166,7 +166,6 @@ export class AddModelComponent implements OnInit, OnDestroy {
         const form = this.modelForm;
 
         if (form && form.valid) {
-            console.log(form.controls.name.value);
             this.productService
                 .createModel(
                     this.currentUser!,
@@ -181,7 +180,6 @@ export class AddModelComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this.destroy$))
                 .subscribe({
                     next: (model) => {
-                        console.log(model);
                         this.commonService.openSnackBarSuccess(
                             'Model created!'
                         );
