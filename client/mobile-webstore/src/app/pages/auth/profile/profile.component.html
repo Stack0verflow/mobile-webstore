@@ -1,5 +1,31 @@
 <main>
     <p class="header-main-text text-center margin-header">Welcome back!</p>
     <h1 class="header-secondary-text text-center">Your orders</h1>
+    @if (orders.length === 0) {
+            <p class="main-text">You haven't made any orders yet.</p>
+        }
+        @for (order of orders; track $index) {
+            <section class="order">
+                <h3 class="text-center">Order #{{ order.uuid }}</h3>
+                <div>
+                    <p>Order time: {{ order.orderTime | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+                    <p>Status: {{ order.status }}</p>
+                    <p>Payment method: {{ order.paymentMethod }}</p>
+                    <p>Payment status: {{ order.paymentStatus }}</p>
+                    @if (order.deliveryTime) {
+                        <p>Delivered at: {{ order.deliveryTime | date: 'yyyy-MM-dd HH:mm:ss' }} </p>
+                    } @else {
+                        <p>Estimated delivery: {{ order.estimatedDelivery | date: 'yyyy-MM-dd HH:mm:ss' }} </p>
+                    }
+                </div>
+                <h3>Ordered products:</h3>
+                @for (product of order.products; track $index) {
+                    <p>Serial: {{ product }}</p>
+                }
+                <p>Total price: €{{ order.total }}</p>
+            </section>
+        }
+
+        <br/>
     <button id="logout-button" mat-raised-button color="primary" (click)="logout()">Log out from your profile</button>
 </main>

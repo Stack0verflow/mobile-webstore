@@ -4,6 +4,8 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { CommonService } from '../../../shared/services/common.service';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { Order } from '../../../shared/interfaces/Order';
+import { OrderService } from '../../../shared/services/order.service';
 
 @Component({
     selector: 'app-profile',
@@ -15,10 +17,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     destroy$: Subject<boolean> = new Subject<boolean>();
 
     currentUser: User | null = null;
+    orders: Order[] = [];
 
     constructor(
         private authService: AuthService,
         private commonService: CommonService,
+        private orderService: OrderService,
         private router: Router
     ) {}
 
@@ -35,10 +39,28 @@ export class ProfileComponent implements OnInit, OnDestroy {
                     this.currentUser = user;
                     if (user === null) {
                         this.router.navigate(['/user/login']);
+                    } else {
+                        this.getUserOrders(user.uuid);
                     }
                 },
                 error: () => {
                     this.router.navigate(['/user/login']);
+                },
+            });
+    }
+
+    getUserOrders(uuid: string) {
+        this.orderService
+            .getUserOrders(uuid)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: (orders) => {
+                    this.orders = orders;
+                },
+                error: () => {
+                    this.commonService.openSnackBarError(
+                        'Could not load orders.'
+                    );
                 },
             });
     }

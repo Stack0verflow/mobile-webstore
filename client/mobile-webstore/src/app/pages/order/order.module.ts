@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { OrderRoutingModule } from './order-routing.module';
 import { CartComponent } from './cart/cart.component';
 import { OrderComponent } from './order/order.component';
-import { PaymentComponent } from './payment/payment.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +15,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
-    declarations: [CartComponent, OrderComponent, PaymentComponent],
+    declarations: [CartComponent, OrderComponent],
     imports: [
         CommonModule,
         OrderRoutingModule,

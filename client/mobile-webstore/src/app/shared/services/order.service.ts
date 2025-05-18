@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { User } from '../interfaces/User';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Order } from '../interfaces/Order';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -13,6 +15,20 @@ export class OrderService {
     });
 
     constructor(private http: HttpClient) {}
+
+    getUserOrders(uuid: string): Observable<Order[]> {
+        const body = new URLSearchParams();
+        body.set('uuid', uuid);
+
+        return this.http.post<Order[]>(
+            this.baseUrl + '/order/get-by-user',
+            body,
+            {
+                headers: this.headers,
+                withCredentials: true,
+            }
+        );
+    }
 
     makeOrder(
         user: User,

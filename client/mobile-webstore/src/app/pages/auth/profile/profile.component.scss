@@ -1,3 +1,5 @@
+@use '../../../../utilities/style-definitions.scss';
+
 main {
     width: min(800px, 90%);
     margin: 0 auto;
@@ -5,4 +7,17 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .order {
+        width: 50%;
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 2px style-definitions.$accent-color solid;
+        border-radius: 8px;
+        background-color: style-definitions.$medium-gray;
+
+        &:hover {
+            background-color: style-definitions.$light-gray;
+        }
+    }
 }

@@ -140,7 +140,7 @@ export class ModifyModelComponent implements OnInit, OnDestroy {
             const picturesGroup = new FormGroup({});
             for (let i = 0; i < this.colors.length; i++) {
                 picturesGroup.addControl(
-                    'picture' + this.colors.length,
+                    'picture' + (i + 1),
                     new FormControl(
                         this.selectedModel.pictures[i],
                         Validators.required

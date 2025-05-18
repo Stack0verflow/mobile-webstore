@@ -673,6 +673,28 @@ export const configureRoutes = (
             });
     });
 
+    router.post('/order/get-by-user', (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            const uuid = req.body.uuid;
+
+            if (!uuid) {
+                res.status(400).send('No uuid given.');
+            } else {
+                const query = Order.find({ user: uuid });
+                query
+                    .then((data) => {
+                        res.status(200).send(data);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        res.status(500).send('Server error.');
+                    });
+            }
+        } else {
+            res.status(400).send('User is not logged in.');
+        }
+    });
+
     router.post('/order/create', (req: Request, res: Response) => {
         if (req.isAuthenticated()) {
             const {
